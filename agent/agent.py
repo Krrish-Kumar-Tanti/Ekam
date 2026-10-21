@@ -519,9 +519,10 @@ def run_agent(user_text: str, history: List[Dict[str, str]] = None, profile: Dic
     global _PENDING_PROPOSAL
 
     # --- Confirm / cancel a staged order (nothing executes without approval) ---
-    t_words = [w.strip("!?,.:;\"'") for w in t.split()]
-    is_confirm = any(k in t for k in _CONFIRM_KEYS) or any(k in t_words or k == t.strip() for k in _BARE_CONFIRM_KEYS) or ("はい" in t)
-    is_cancel = any(k in t for k in _CANCEL_KEYS) or any(k in t_words or k == t.strip() for k in _BARE_CANCEL_KEYS) or ("いいえ" in t)
+    # Bare yes/no words ONLY count when they are the entire message — a stray
+    # "hai"/"no" inside a longer question must never execute or cancel an order.
+    is_confirm = any(k in t for k in _CONFIRM_KEYS) or (t.strip().strip("!?,.:;") in _BARE_CONFIRM_KEYS)
+    is_cancel = any(k in t for k in _CANCEL_KEYS) or (t.strip().strip("!?,.:;") in _BARE_CANCEL_KEYS)
     if is_confirm and _PENDING_PROPOSAL:
         res = tool_confirm_order(_PENDING_PROPOSAL, True); tools_used.append("confirm_order")
         _PENDING_PROPOSAL = None

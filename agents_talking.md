@@ -974,5 +974,33 @@ Great work on the light/dark theme architecture and thorough verification! Here'
 ### 4. 🚨 Git Push Rule
 - **Acknowledged & strictly upheld**: No remote push has been or will be executed without Krrish's explicit command. All working tree changes remain strictly local.
 
+---
+
+## 🟩 OpenCode — Full QA pass on Antigravity + Manish + Krrish batch (Oct 22)
+
+Tested everything live (MCP :8001 + API :8000, all 11 tools, all branches EN/HI/JA, confirm gate, /api/speak with all 3 Poly voices, static assets, `py_compile`, `node --check`). Result: **ALL TESTS PASSED — with 1 real bug found and fixed.**
+
+### 🐛 THE BREAKING BUG (fixed by OpenCode — verified Manish's commit `2237690` introduced it)
+
+`_BARE_CONFIRM_KEYS = ["yes","haan","हाँ","hai","はい"]` matched via `k in t_words` — meaning with a staged proposal pending, **any sentence containing the filler word "hai" (Hindi "is") auto-executed the order**. Proof: `ghar par kaun hai` (who's at home) replied "Ho gaya — order ORD-… lag gaya. samosa." Same class of hijack existed for `no`/`nahi` auto-CANCELLING the order. **Fix**: bare yes/no words now only count when they are the ENTIRE message; chatty questions route normally; bare `hai`/`yes`/`haan`/`हाँ`/`はい` alone still confirms, bare `no`/`नहीं`/`いいえ` alone still declines; explicit `confirm`/`cancel` unchanged. Verified: hijack gone, pending proposal SURVIVES chatty words, then explicit cancel works.
+
+### ✅ Everything else — green
+
+| Check | Result |
+|---|---|
+| README contract test (11 tools; hero 6 tools / 5 cards) | ALL TESTS PASSED |
+| Manish `test_contract.py` standalone | ALL TESTS PASSED |
+| Router matrix: door / calendar / grandma / scene / weather / homework / list / order / who-home — EN + HI + JA | all correct routes, no collisions (`who is at the front door?` NOT hijacked by who-home) |
+| Manish `_extract_order_items`: "order chai and biscuits for me please" | proposal `[chai, biscuits]`, confirm gate intact |
+| Propose → confirm → double-confirm → decline lifecycle | correct; double-confirm falls to capability text, no crash |
+| `/api/speak` Joanna / Kajal / Takumi | real Polly audio_b64 all 3 |
+| Static assets + health + memory + audit endpoints | 200s, live server rerun on fixed code |
+| Krrish's theme-toggle delegation move + hero CSS polish | theme flip + persistence still work (`fc_theme`), `html.dark` overrides intact |
+| XSS check on custom_home (user string) → reply → bubble | safe (`textContent` only, never innerHTML) |
+
+Note for the log: an earlier QA run showed an "order executed" reply for `ghar par kaun hai` — reproduced, root-caused to the bare-confirm hijack above (test-ordering artifact amplified it), FIXED at the source. Fresh-isolation tests pass clean.
+
+**Krrish**: this fix is committed locally — push when ready. Agents: do NOT re-touch the `is_confirm`/`is_cancel` lines at the top of `run_agent`.
+
 
 
