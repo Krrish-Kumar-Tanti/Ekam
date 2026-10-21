@@ -10,7 +10,7 @@ Everything in this repo is one of three things. Learn these and you understand 9
 
 **1. The hands — `mcp-server/server.py`.** A small server that exposes 11 tools (calendar, TV, door camera, grocery ordering, proposal gate, confirmation gate, grandma reminders, room scenes, weather, homework check, shopping list). It speaks an open Amazon-backed standard called MCP, which is just a fixed way of saying *"here are my tools, call them like this."* When anyone — our app, or one day real Alexa+ — wants something done, they call a tool here.
 
-**2. The receptionist — `agent/agent.py`.** Takes your sentence, figures out which tools to call, and writes the reply. Today it matches keywords ("door" → door tool). When AWS approves our account, a real AI model (Nova/Claude via Bedrock) takes over the thinking. Same tools, smarter receptionist.
+**2. The receptionist — `agent/agent.py`.** Takes your sentence, figures out which tools to call, and writes the reply. Today it matches keywords ("door" → door tool) — fast, deterministic, works with no network. Optionally, a real AI model (Nova/Claude via Bedrock) can take over the thinking: the integration is fully wired, just set `USE_BEDROCK=1`.
 
 **3. The face — `app/` (a normal web page, no build tools).** Chat box, visual cards, tool-call badges, voice button. It just calls our own API and draws what comes back.
 
@@ -24,7 +24,7 @@ Type **"movie night with kids"** and watch it travel:
 2. `api/main.py` → hands it to `run_agent()` in `agent/agent.py`. Thin bridge, no thinking here.
 3. `run_agent()` sees "movie" + "night" and calls 6 tools from the MCP server: `get_calendar`, `tv_control`, `door_status`, `order_groceries`, `scene_control`, `get_weather`.
 4. Each tool call is written into the audit ledger, and the turn is saved to memory.
-5. The reply + 5 visual cards + the tool badges come back to the page. If AWS keys are live, Bedrock polishes the wording; if not, the built-in reply is used. The demo never breaks either way.
+5. The reply + 5 visual cards + the tool badges come back to the page. With `USE_BEDROCK=1` (any account with model access), Bedrock polishes the wording; by default the built-in reply is used. The demo never breaks either way.
 
 Try it with the browser's developer console open — you'll see each step land in real time.
 
@@ -99,7 +99,7 @@ Waiting on AWS: the AI brain (account approval pending) — everything is built 
 
 **Why Python 3.9?** The build machine has 3.9.6 and nothing newer was available at the start, so everything is written to run there (and therefore everywhere newer too).
 
-**Why does the voice work but not the brain?** Different gates: Polly voice needed only keys (done, live). Bedrock models need account approval (pending). Code handles both states.
+**Why does the voice work but not the AI wording?** Different gates: Polly voice needed only keys (done, live). Bedrock model access was **denied by AWS for this account** (friction log #5), so the shipped design is a deterministic mock brain — fast and network-free. The Bedrock integration is real and dormant: set `USE_BEDROCK=1` on any account with model access and it takes over with zero code changes.
 
 **What do the agents do?** OpenCode: backend + commits. Antigravity: everything inside `app/` (looks, cards, voice button). Kiro: video timing + Devpost copy. You: decisions, video, submit. Details in `agents_talking.md`.
 
@@ -150,7 +150,7 @@ First visit shows a 10-second onboarding: pick who Alexa calls you, the language
 | हिन्दी (roman) | Polly Kajal (`hi-IN`) | `movie night aaj karna hai`, `dadi se baat karao`, `darwaza` |
 | 日本語 | Polly Takumi (`ja-JP`) | `映画の夜の準備`, `玄関はどう？` |
 
-Voice switching is real Polly speech (verified MP3s), replies and UI chrome switch too. Tool names and the `POST /mcp` panels stay English on purpose — they're protocol identifiers for judges to inspect. Bedrock (when it clears) gets told the reply language too; mock brain covers otherwise.
+Voice switching is real Polly speech (verified MP3s), replies and UI chrome switch too. Tool names and the `POST /mcp` panels stay English on purpose — they're protocol identifiers for judges to inspect. When Bedrock is enabled (`USE_BEDROCK=1`), it gets told the reply language too; the default mock brain covers otherwise.
 
 ## Example Phrases
 
@@ -178,7 +178,7 @@ Each phrase triggers a different combination of the 11 tools. The first one ("mo
 
 - **Localhost only.** The demo runs on `127.0.0.1:8000` / `:8001`. We chose to invest build time in multilingual voice, rich cards, and the confirm gate rather than hosting infra. `bash run.sh` brings everything up cold on any machine with Python 3.9+.
 - **Simulated devices.** TV, door camera, and store are mock data — the hackathon's simulated path explicitly allows this. The code is shaped so real backends can replace the mocks later.
-- **Bedrock pending.** AWS account approval is in progress. The agent falls back to a keyword router that covers every demo beat; when Bedrock clears, it takes over automatically.
+- **Bedrock access denied by AWS** (support case closed Oct 21 — friction log #5). The agent's built-in keyword router is the designed default: it covers every demo beat with zero latency and zero network dependence. The Bedrock integration (Nova format, Anthropic fallback) is fully wired behind `USE_BEDROCK=1` — flip the flag on any account with model access and the same code takes over automatically.
 
 ## License
 

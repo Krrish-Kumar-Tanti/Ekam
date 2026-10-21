@@ -20,8 +20,8 @@
 ## 3. AWS state (do NOT re-do any of this)
 
 - Local `.env` EXISTS in repo root (gitignored, never commit, never paste into chat): USE_BEDROCK=1, USE_POLLY=1, region us-east-1, IAM user `family-captain-demo`, BEDROCK_MODEL_ID=amazon.nova-micro-v1:0, POLLY_VOICE=Joanna. Keys work (STS verified).
-- **Polly is LIVE** (verified real MP3 bytes). **Bedrock is BLOCKED**: `InvokeModel` → "Operation not allowed" (free-plan gate). Anthropic use-case form also blocked ("account not authorized"). A service-limit support case was filed under General (Krrish did it). If it clears: NOTHING to change in code — brain wakes automatically. Re-test with the one-liner in §5.
-- If Krrish says "brain still dead": check support case reply first, then consider paid-plan upgrade (his call — demo is complete without Bedrock).
+- **Polly is LIVE** (verified real MP3 bytes). **Bedrock is DEAD for this account — final**: AWS support **denied** the model-access/quota request Oct 21, 12:01 PM IST ("use 90% of current quotas, re-request after the next billing cycle" — impossible before the Oct 23 deadline). Per Krrish: stop hoping, ship without it. Local `.env` now has `USE_BEDROCK=0` → the deterministic mock brain is the designed default (also kills the doomed InvokeModel latency + fallback noise). Integration stays fully wired: set `USE_BEDROCK=1` with creds that have model access and the same code lights up, zero code changes. Friction log #5 + README + SUBMISSION updated to match — this is the honest AWS-Builder story now.
+- If Krrish says "brain still dead": CLOSED — Bedrock denied by AWS, decision made (mock-first is the shipped design, see §3 update above). No paid-plan action pending.
 
 ## 4. What's DONE (all pushed; last commit rewrote README to teaching voice)
 

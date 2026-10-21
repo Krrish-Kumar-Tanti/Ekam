@@ -41,11 +41,11 @@
 ## 5. Bedrock gated on a brand-new account
 
 - **Task:** Get a real AI brain (Bedrock Nova/Claude) for the demo.
-- **Steps:** Created IAM user + keys (worked), enabled the model path — every `InvokeModel` returns "Operation not allowed". Anthropic's in-console use-case form refuses to submit ("account not authorized"); Basic Support can't file technical cases, only service-limit ones, and Bedrock isn't listed there either.
-- **Expected vs actual:** Expected model access after signup; got a multi-layer approval maze instead.
-- **Severity:** Important (blocks the live brain, not the demo — mocks cover everything).
-- **Workaround:** Filed a service-limit case under General; built the brain fallback-first (Nova + Anthropic formats, memory context) so it wakes up with zero code changes when AWS clears us. Polly voice needed no approval and is live.
-- **Suggestion:** Let new accounts invoke at least the cheapest models (Nova Micro) immediately — gating everything pushes student builders away from Bedrock entirely.
+- **Steps:** Created IAM user + keys (worked), enabled the model path — every `InvokeModel` returns "Operation not allowed". Anthropic's in-console use-case form refuses to submit ("account not authorized"); Basic Support can't file technical cases, only service-limit ones, and Bedrock isn't listed there either. Filed a quota-access case; on **Oct 21, 12:01 PM IST** AWS support replied: the internal service team **denied the request**, advising to "use 90% of current quotas" and re-request "after the next billing cycle" — a cycle that ends well after the hackathon deadline.
+- **Expected vs actual:** Expected model access after signup (or at least after a human-reviewed case); got a multi-layer maze that ended in a denial 2 days before the deadline, with a retry path that cannot land in time.
+- **Severity:** Important (blocked the live brain, NOT the demo — the mock brain covers every beat).
+- **Workaround:** Built the brain fallback-first, then made it the designed default: the deterministic keyword router is the primary brain (zero network dependency, covers every demo beat), and the Bedrock integration (Nova format + Anthropic fallback, memory context) ships **dormant behind a single env flag** — set `USE_BEDROCK=1` on any account with model access and the same code path lights up with zero code changes. Polly voice needed no approval and is live.
+- **Suggestion:** Let new accounts invoke at least the cheapest models (Nova Micro) immediately — gating everything pushes student builders away from Bedrock entirely. Also: a denial email that offers a retry "after the next billing cycle" is useless for hackathon timelines; surface faster paths for short-lived event accounts.
 
 ## 6. Support-case maze for a simple ask
 

@@ -7,7 +7,7 @@
 ## 1. What we are entering
 
 - **Track: Alexa+** — simulated-experience path (web app, any agentic tool allowed; MCP/SDK not mandatory, but we include a real MCP server anyway).
-- **Mini: AWS Builder** — Bedrock (`boto3` `bedrock-runtime.invoke_model`, Claude Sonnet) + Strands-style tool loop in `agent/agent.py`. Document services + how used in feedback answer.
+- **Mini: AWS Builder** — Bedrock (`boto3` `bedrock-runtime.invoke_model`, Nova format + Anthropic fallback) fully wired in `agent/agent.py` behind `USE_BEDROCK=1`; Strands-style tool loop in `run_agent`. Model access was denied for this account (friction log #5) — ship the mock-first brain as designed default and tell that story honestly in feedback.
 - **Mini: Open Source** — public repo + MIT `LICENSE`. Include: contribution URL (= repo URL), GitHub username, what/why description.
 
 One project, one track (Alexa+), up to one mini prize — no other tracks in this repo.
@@ -26,13 +26,13 @@ One project, one track (Alexa+), up to one mini prize — no other tracks in thi
 |---|---|---|
 | 0:00–0:25 | Title + problem: chaotic family evenings | "Family Captain: one Alexa+ command runs movie night — calendar, TV, front door, snacks, Grandma check-in." |
 | 0:25–1:50 | LIVE at `http://127.0.0.1:8000`: speak/type "movie night with kids" → point to tool badges firing → scroll cards → follow-ups "front door?" and "check in on grandma" | Call out kids-mode ON, state across turns, purchasing + caretaking cards. |
-| 1:50–2:25 | Code walk (30s): `mcp-server/server.py` tools/list → `agent/agent.py` Bedrock call → `POST /mcp` in terminal | "Real MCP 2025-11-25 server with 11 tools, Bedrock-ready integration (live the moment AWS clears the account, mock brain covers meanwhile)." |
+| 1:50–2:25 | Code walk (30s): `mcp-server/server.py` tools/list → `agent/agent.py` tool loop + `try_bedrock_reply` → `POST /mcp` in terminal | "Real MCP 2025-11-25 server with 11 tools. The brain ships mock-first — instant, zero-dependency — and the Bedrock integration is one env flag away on any account with model access." |
 | 2:25–2:45 | Impact close: elderly check-in + kid safety + what's next | End on repo URL. |
 
 ## 4. Product feedback template (paste into Devpost, fill honestly)
 
 **Alexa+ MCP (simulated path, MCP spec 2025-11-25 Streamable HTTP):** Used for ___. Worked well: ___. Needs work: ___. Onboarding: ___. Build again? ___.
-**AWS Bedrock (+ Strands-style loop):** Services: Bedrock Claude Sonnet via boto3 in `agent/agent.py:try_bedrock_reply`; tool orchestration in `run_agent`. Used for ___. ...
+**AWS Bedrock (+ Strands-style loop):** Services: Amazon Bedrock runtime via `boto3` `bedrock-runtime.invoke_model` in `agent/agent.py:try_bedrock_reply` (Nova prompt format with Anthropic fallback, reply-language hint, last-6-turns memory context); tool orchestration in `run_agent`. Used for polishing conversational replies after the 6-tool hero orchestration — fully implemented and testable on any account with model access via `USE_BEDROCK=1`. Honest story: our account's model-access request was denied by AWS support (see friction log), so the shipped default is the deterministic mock brain — intentional graceful degradation — while showing judges the exact code path that would run live. Feedback angle: quota gating for brand-new/free accounts blocks student builders; a small always-on allowance for Nova Micro would change hackathon adoption.
 **Onboarding overall:** ___.
 
 ## 5. Friction log template (each entry = bonus points)

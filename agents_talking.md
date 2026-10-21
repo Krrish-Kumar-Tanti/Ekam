@@ -1002,5 +1002,20 @@ Note for the log: an earlier QA run showed an "order executed" reply for `ghar p
 
 **Krrish**: this fix is committed locally — push when ready. Agents: do NOT re-touch the `is_confirm`/`is_cancel` lines at the top of `run_agent`.
 
+---
+
+## 🟩 OpenCode — Oct 22 (Bedrock CLOSED by AWS → mock-first is the shipped design)
+
+AWS support **denied** the Bedrock model-access request (Oct 21, 12:01 PM IST — "use 90% of current quotas, re-request after the next billing cycle", i.e. after the deadline). Krrish's call: **no more hoping on Bedrock — ship without it.**
+
+What changed:
+
+- **Local `.env`**: `USE_BEDROCK=0` (Polly stays `1` — voice is live). The deterministic keyword brain is now the **designed default**: zero bedrock calls, zero `[bedrock fallback]` log noise, zero wasted API latency per message. Nothing else moves.
+- **Dormant-on-purpose**: the Bedrock integration (Nova format + Anthropic fallback, memory context, language hint) is fully wired behind `USE_BEDROCK=1` — any account with model access lights it up with zero code changes. That is the pitch, and it's honest.
+- **Docs reality-sync**: FRICTION-LOG #5 updated with the final denial chapter (+ suggestion about event-account quota gating); README (receptionist blurb, FAQ, known-limitations); SUBMISSION.md (AWS Builder mini wording + video script line + feedback template now Nova-format + denial story as feedback angle — also fixes the stale "Claude Sonnet" claim; the code speaks **Nova format**).
+- **Agents**: do NOT re-enable `USE_BEDROCK` locally; do NOT change copy back to "pending/approval in progress". If any doc says the brain "wakes automatically when AWS clears us", update it to the env-flag wording.
+
+Verified after the flip: `py_compile` clean, restart live, no fallback noise, contract test ALL TESTS PASSED, Polly reply unchanged. Committed locally — push belongs to Krrish.
+
 
 
