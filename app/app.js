@@ -9,7 +9,7 @@ const onboardEl = document.getElementById("onboard");
 let history = [];
 let PROFILE = { name: "Family", lang: "en", land: "", kids_home: true, wife_home: false, grandparents_home: false, relatives_home: false, custom_home: "" };
 try {
-  const saved = JSON.parse(localStorage.getItem("fc_profile") || "{}");
+  const saved = JSON.parse(localStorage.getItem("ekam_profile") || "{}");
   if (saved.name) PROFILE.name = String(saved.name);
   if (saved.lang) PROFILE.lang = String(saved.lang);
   if (saved.land) PROFILE.land = String(saved.land);
@@ -41,7 +41,7 @@ const I18N = {
     obTitle: "Let's get to know you",
     obSub: "Ten seconds — then my memory is yours.",
     obNameQ: "What should I call you?",
-    obLangQ: "Alexa ki zubaan — ことばをえらんでね",
+    obLangQ: "Ecom ki zubaan — ことばをえらんでね",
     obDone: "Let's go →",
     obCustomPh: "Type a name…",
     obAgeQ: "A little about you — optional, skip anytime",
@@ -116,7 +116,7 @@ const I18N = {
     obTitle: "Pehli mulaquat — chalo jaan-pahchaan ho jaye",
     obSub: "Das second lagenge — phir meri yaaddasht aapki hai.",
     obNameQ: "Main aapko kya bulau?",
-    obLangQ: "Alexa ki zubaan — ことばをえらんでね",
+    obLangQ: "Ecom ki zubaan — ことばをえらんでね",
     obDone: "Chalo shuru karein →",
     obCustomPh: "Naam likhiye…",
     obAgeQ: "Thoda apne baare mein — optional, kabhi skip",
@@ -265,7 +265,7 @@ const I18N = {
 };
 function t08n(){ return I18N[PROFILE.lang] || I18N.en; }
 
-// Live "what will Alexa run" detection while typing (mirrors agent/agent.py router order).
+// Live "what will Ecom run" detection while typing (mirrors agent/agent.py router order).
 // Normalization: lowercase + collapse extra spaces, so case/spacing never break matching.
 let mayConfirm = false;
 const HINT_RULES = [
@@ -308,14 +308,14 @@ function bubble(who, text){
   const d = document.createElement("div");
   d.className = "msg " + who;
   const label = document.createElement("b");
-  label.textContent = who === "alexa" ? "Alexa+" : "You";
+  label.textContent = who === "ecom" ? "Ecom" : "You";
   d.appendChild(label);
   const body = document.createElement("span");
   body.className = "msg-text";
   d.appendChild(body);
   chat.appendChild(d);
   chat.scrollTop = chat.scrollHeight;
-  typeInto(body, text, who === "alexa" ? 1300 : 0);
+  typeInto(body, text, who === "ecom" ? 1300 : 0);
 }
 
 function typeInto(el, text, dur){
@@ -334,7 +334,7 @@ function typeInto(el, text, dur){
 }
 
 function saveProfile(){
-  try{ localStorage.setItem("fc_profile", JSON.stringify(PROFILE)); }catch(e){}
+  try{ localStorage.setItem("ekam_profile", JSON.stringify(PROFILE)); }catch(e){}
   updateUserHeader();
 }
 
@@ -432,9 +432,9 @@ function hideEmptyState(){
 
 function showThinking(){
   const d = document.createElement("div");
-  d.className = "msg alexa thinking";
+  d.className = "msg ecom thinking";
   d.id = "thinking";
-  d.innerHTML = "<b>Alexa+</b><span class='dots'><i></i><i></i><i></i></span>";
+  d.innerHTML = "<b>Ecom</b><span class='dots'><i></i><i></i><i></i></span>";
   chat.appendChild(d);
   chat.scrollTop = chat.scrollHeight;
 }
@@ -839,7 +839,7 @@ async function send(text, fromQueue){
     const out = await r.json();
     if(!out || typeof out.reply !== "string") throw new Error("bad payload");
     hideThinking();
-    bubble("alexa", out.reply);
+    bubble("ecom", out.reply);
     renderCards(out.cards);
     renderTools(out.tools_used);
     if(out.cards && out.cards.some(c=>c.type==="order_proposal")){
@@ -854,12 +854,12 @@ async function send(text, fromQueue){
     } else {
       updateChatCount(history.length + 1);
     }
-    history.push({user:text, alexa:out.reply});
+    history.push({user:text, ecom:out.reply});
     setBusy(false);
     runNextTurn();
   }catch(e){
     hideThinking();
-    bubble("alexa", t08n().error);
+    bubble("ecom", t08n().error);
     setBusy(false);
     runNextTurn();
   }
@@ -1046,7 +1046,7 @@ if(obClose){
 const logoutBtn = document.getElementById("logout-btn");
 if(logoutBtn){
   logoutBtn.onclick = ()=>{
-    localStorage.removeItem("fc_profile");
+    localStorage.removeItem("ekam_profile");
     PROFILE = { name: "Family", lang: "en", land: "", kids_home: true, wife_home: false, grandparents_home: false, relatives_home: false, custom_home: "" };
     OB_DEFAULTS.agegroup = "";
     OB_DEFAULTS.gender = "";
@@ -1089,7 +1089,7 @@ document.addEventListener("click", (e)=>{
   if(themeBtn){
     const dark = !document.documentElement.classList.contains("dark");
     document.documentElement.classList.toggle("dark", dark);
-    try{ localStorage.setItem("fc_theme", dark ? "dark" : "light"); }catch(err){}
+    try{ localStorage.setItem("ekam_theme", dark ? "dark" : "light"); }catch(err){}
     return;
   }
   const q = e.target.closest("[data-q]");
@@ -1194,7 +1194,7 @@ updateTypeHint();
 
 // Light/dark theme (persists across visits)
 let darkSaved = false;
-try{ darkSaved = localStorage.getItem("fc_theme") === "dark"; }catch(e){}
+try{ darkSaved = localStorage.getItem("ekam_theme") === "dark"; }catch(e){}
 document.documentElement.classList.toggle("dark", darkSaved);
 
 // Initial load: first visit → landing; returning → straight into the app.

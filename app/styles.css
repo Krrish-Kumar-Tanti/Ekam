@@ -250,16 +250,16 @@ body{
   transform:translateY(-1px);
 }
 
-/* ── Messages (Claude-style: user bubble, Alexa plain) ── */
+/* ── Messages (Claude-style: user bubble, Ecom plain) ── */
 .msg{max-width:86%;font-size:14.5px;animation:msg-in .34s cubic-bezier(.16,1,.3,1)}
 .msg b{
   font-weight:600;font-size:11px;letter-spacing:.6px;display:block;margin-bottom:5px;
   color:var(--ink-3);text-transform:none;
   display:flex;align-items:center;gap:6px;
 }
-.msg.alexa{align-self:flex-start;padding:2px 0}
-.msg.alexa b{color:var(--accent)}
-.msg.alexa b::before{
+.msg.ecom{align-self:flex-start;padding:2px 0}
+.msg.ecom b{color:var(--accent)}
+.msg.ecom b::before{
   content:'';width:6px;height:6px;border-radius:50%;
   background:var(--accent);box-shadow:0 0 8px var(--accent);
   display:inline-block;

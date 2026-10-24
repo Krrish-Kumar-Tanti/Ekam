@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Alexa+ Family Captain - Simulated Experience</title>
-<script>try{if(localStorage.getItem("fc_theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}</script>
-<link rel="stylesheet" href="/app/styles.css?v=2.1" />
+<title>EKAM - Simulated Ecom Experience</title>
+<script>try{if(localStorage.getItem("ekam_theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}</script>
+<link rel="stylesheet" href="/app/styles.css?v=2.2" />
 </head>
 <body>
 <div class="bg"></div>
 
 <div id="landing">
   <div class="land-top-bar">
-    <div class="logo" id="land-logo" role="button" tabindex="0" title="Open Family Captain App"> <span class="ring"></span> alexa+ <em>family captain</em></div>
+    <div class="logo" id="land-logo" role="button" tabindex="0" title="Open EKAM App"> <span class="ring"></span> EKAM <em>ecom</em></div>
     <div class="badges">
       <button class="theme-toggle" title="Toggle light / dark mode" aria-label="Toggle light or dark theme"><span class="t-opt t-light">Light</span><span class="t-opt t-dark">Dark</span></button>
-      <button class="pill linklike" id="land-nav-app" title="Open Family Captain App">Open App →</button>
+      <button class="pill linklike" id="land-nav-app" title="Open EKAM App">Open App →</button>
     </div>
   </div>
   <div class="land-card">
     <span class="ring big"></span>
-    <div class="land-eyebrow">alexa+ family captain · simulated experience</div>
+    <div class="land-eyebrow">EKAM · simulated Ecom experience</div>
     <h1>One sentence, and the evening sets itself up.</h1>
-    <p>Calendar, living-room TV, front door, snacks, Grandma — Alexa+ orchestrates them all through <b>11 real MCP tools</b>, remembers your family, and never orders a thing without your confirm.</p>
+    <p>Calendar, living-room TV, front door, snacks, Grandma — Ecom orchestrates them all through <b>11 real MCP tools</b>, remembers your family, and never orders a thing without your confirm.</p>
     <div class="land-ctas">
       <button class="hero-cta" id="land-cta">Tell me about yourself →</button>
       <button class="land-skip" id="land-skip">just show me the app</button>
@@ -32,15 +32,16 @@
     <span>11 MCP tools</span><span>MCP 2025-11-25 Streamable HTTP</span><span>EN / हिन्दी / 日本語</span><span>Polly neural voices</span><span>nothing ordered without confirm</span><span>audit ledger on disk</span><span>memory that persists</span>
     <span>11 MCP tools</span><span>MCP 2025-11-25 Streamable HTTP</span><span>EN / हिन्दी / 日本語</span><span>Polly neural voices</span><span>nothing ordered without confirm</span><span>audit ledger on disk</span><span>memory that persists</span>
   </div></div>
-  <div class="land-footer">Simulated Alexa+ experience · built for the Amazon Developer Hackathon</div>
+  <div class="land-footer">EKAM · simulated Ecom experience · built for the Amazon Developer Hackathon</div>
 </div>
 
 <header class="topbar">
-  <div class="logo" id="nav-brand" role="button" tabindex="0" title="Go to landing page"> <span class="ring"></span> alexa+ <em>family captain</em></div>
+  <div class="logo" id="nav-brand" role="button" tabindex="0" title="Go to landing page"> <span class="ring"></span> EKAM <em>ecom</em></div>
   <div class="badges">
     <button class="pill linklike" id="nav-landing" title="View landing page">Landing</button>
+    <a href="/app/aws-flow.html" target="_blank" class="pill linklike" style="text-decoration:none; color:inherit;" title="View interactive AWS Architecture & Flow">AWS Architecture ↗</a>
     <span class="pill" id="memory-pill">Memory: <span id="memory-count">0 chats</span></span>
-    <span class="pill">SIMULATED ALEXA+ EXPERIENCE</span>
+    <span class="pill">SIMULATED ECOM EXPERIENCE</span>
     <span class="pill dim">MCP 2025-11-25 • Streamable HTTP</span>
     <span class="pill user-badge" id="user-profile-badge" title="Active user profile"><strong id="user-display-name">Krrish</strong> <span id="user-display-details" class="user-sub"></span></span>
     <button class="pill linklike" id="edit-profile" title="Edit profile">Profile</button>
@@ -106,7 +107,7 @@
             <button class="hero-cta" id="ob-n3">Next →</button>
           </div>
           <div class="ob-step" data-step="4" hidden>
-            <div class="onboard-q" id="ob-lang-q">Alexa ki zubaan — ことばをえらんでね</div>
+            <div class="onboard-q" id="ob-lang-q">Ecom ki zubaan — ことばをえらんでね</div>
             <div class="onboard-chips" id="ob-langs">
               <button data-oblang="en" class="sel">English</button>
               <button data-oblang="hi">हिन्दी</button>
@@ -151,12 +152,12 @@
 
   <aside class="side-col">
     <div class="card">
-      <h3>Alexa's screen</h3>
-      <div id="cards"><p class="muted">When Alexa does something, its card shows up here.</p></div>
+      <h3>Ecom's screen</h3>
+      <div id="cards"><p class="muted">When Ecom does something, its card shows up here.</p></div>
     </div>
     <div class="card">
       <h3>MCP tool calls</h3>
-      <div id="tools"><p class="muted">None yet — ask Alexa something.</p></div>
+      <div id="tools"><p class="muted">None yet — ask Ecom something.</p></div>
       <p class="muted small">Backend: <code>POST /mcp</code> JSON-RPC • <code>mcp-server/server.py</code> • Agent: <code>agent/agent.py</code> (+ Bedrock optional)</p>
     </div>
     <div class="card">
@@ -167,6 +168,6 @@
   </aside>
 </main>
 
-<script src="/app/app.js?v=2.1"></script>
+<script src="/app/app.js?v=2.2"></script>
 </body>
 </html>

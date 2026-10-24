@@ -1,5 +1,5 @@
 """
-Alexa+ Family Captain - Agent brain.
+EKAM - Agent brain.
 Tries AWS Bedrock (Strands SDK / boto3) if credentials exist,
 otherwise uses built-in mock brain so demo ALWAYS works.
 
@@ -277,11 +277,11 @@ _T = {
         "ja": " お知らせ：%s — だからおうちで過ごすのが正解です。",
     },
     "who_you": {
-        "en": "I'm Family Captain — your Alexa+ helper for movie nights, front-door checks, "
+        "en": "I'm EKAM — your Ecom helper for movie nights, front-door checks, "
               "calendar, snack orders and checking in on Grandma.",
-        "hi": "Main Family Captain hoon — aapka Alexa+ helper: movie night, darwaza check, calendar, "
+        "hi": "Main EKAM hoon — aapka Ecom helper: movie night, darwaza check, calendar, "
               "snack orders aur Dadi ka check-in.",
-        "ja": "Family Captainです——映画の夜、玄関チェック、カレンダー、おやつの注文、おばあちゃんの状況チェックをお手伝いする Alexa+ helper です。",
+        "ja": "EKAMです——映画の夜、玄関チェック、カレンダー、おやつの注文、おばあちゃんの状況チェックをお手伝いする Ecom helper です。",
     },
     "you_known": {
         "en": "You're %s. We've talked %d times — the last one was about '%s'. "
@@ -307,11 +307,11 @@ _T = {
               "会話は続けて覚えています。「movie night with kids」を試してください。",
     },
     "default": {
-        "en": "I'm your Family Captain — movie night, front door, calendar, snacks, all in one go. "
+        "en": "I'm EKAM — movie night, front door, calendar, snacks, all in one go. "
               "We've talked %d times so far and I remember. Try 'movie night with kids'.",
-        "hi": "Main aapka Family Captain hoon — movie night, darwaza, calendar, snacks, ek saath sabkuch. "
+        "hi": "Main aapka EKAM hoon — movie night, darwaza, calendar, snacks, ek saath sabkuch. "
               "Ab tak hum logon ne %d baar baat ki hai, mujhe yaad hai. Try: 'movie night with kids'.",
-        "ja": "Family Captainです——映画の夜も、玄関も、カレンダーも、おやつの注文も、いちどにやります。"
+        "ja": "EKAMです——映画の夜も、玄関も、カレンダーも、おやつの注文も、いちどにやります。"
               "これまで%d回話しましたね。覚えていますよ。「movie night with kids」をどうぞ。",
     },
 }
@@ -365,7 +365,7 @@ def try_bedrock_reply(user_text: str, context: str, lang: str = "en") -> str:
         region = os.getenv("AWS_REGION", "us-east-1")
         model = os.getenv("BEDROCK_MODEL_ID", "amazon.nova-micro-v1:0")
         client = boto3.client("bedrock-runtime", region_name=region)
-        prompt = ("You are Alexa+ Family Captain. Reply in %s. Context:\n%s\nUser: %s\n"
+        prompt = ("You are EKAM, an Ecom home assistant. Reply in %s. Context:\n%s\nUser: %s\n"
                   "Reply in 2 friendly sentences." % (
                       _BEDROCK_LANG_LABEL.get(lang, "English"), context, user_text))
         if "nova" in model.lower():
@@ -382,7 +382,7 @@ def memory_context(max_turns: int = 6) -> str:
         mem = load_memory()[-max_turns:]
         if not mem:
             return ""
-        lines = ["User: %s / Alexa: %s" % (m.get("user", ""), m.get("reply", "")) for m in mem]
+        lines = ["User: %s / Ecom: %s" % (m.get("user", ""), m.get("reply", "")) for m in mem]
         return "Conversation so far:\n" + "\n".join(lines)
     except Exception:
         return ""

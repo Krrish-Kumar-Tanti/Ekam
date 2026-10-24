@@ -1,5 +1,5 @@
 """
-Contract test for Family Captain MCP server and API.
+Contract test for EKAM MCP server and API.
 Extract of the README contract test assertions.
 """
 import os

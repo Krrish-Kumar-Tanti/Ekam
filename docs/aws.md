@@ -1,4 +1,4 @@
-# AWS Architecture & Bedrock Integration — Family Captain
+# AWS Architecture & Bedrock Integration — EKAM
 
 > **Hackathon Mini-Track**: AWS Builder  
 > **Primary Service**: Amazon Bedrock (`anthropic.claude-3-sonnet-20240229-v1:0` via `boto3`)  
@@ -11,11 +11,11 @@
 
 ```mermaid
 graph TD
-    User([User Voice / Input]) -->|Speech / Text| UI[Alexa+ TV Experience UI\napp/index.html & app.js]
+    User([User Voice / Input]) -->|Speech / Text| UI[Ecom TV Experience UI\napp/index.html & app.js]
     UI -->|POST /api/chat| API[FastAPI Bridge\napi/main.py]
     
     subgraph "Agent Brain (agent/agent.py)"
-        API --> Router[Family Captain Agent]
+        API --> Router[EKAM Agent]
         Router <-->|Load / Persist| Memory[(Session Memory\nagent/memory.json)]
         Router -->|1. Context & Prompt| Bedrock[AWS Bedrock Runtime\nClaude 3 Sonnet via boto3]
         Router -->|2. Orchestrate Tools| MCPClient[MCP Dispatcher]
@@ -54,7 +54,7 @@ def try_bedrock_reply(user_text: str, context: str) -> str:
         region = os.getenv("AWS_REGION", "us-east-1")
         model = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-sonnet-20240229-v1:0")
         client = boto3.client("bedrock-runtime", region_name=region)
-        prompt = "You are Alexa+ Family Captain. Context:\n%s\nUser: %s\nReply in 2 friendly sentences." % (
+        prompt = "You are EKAM, an Ecom home assistant. Context:\n%s\nUser: %s\nReply in 2 friendly sentences." % (
             context, user_text)
         body = json.dumps({
             "anthropic_version": "bedrock-2023-05-31",
@@ -77,7 +77,7 @@ def try_bedrock_reply(user_text: str, context: str) -> str:
 
 ## 3. Production Deployment Blueprint on AWS
 
-For production Alexa+ deployment at Amazon scale, this prototype maps directly to managed AWS serverless infrastructure:
+For production Ecom deployment at Amazon scale, this prototype maps directly to managed AWS serverless infrastructure:
 
 ```mermaid
 sequenceDiagram
@@ -89,7 +89,7 @@ sequenceDiagram
     participant Bedrock as Amazon Bedrock (Claude 3.5 Sonnet)
     participant MCP as MCP Microservices (ECS Fargate / IoT)
 
-    Family->>APIGW: "Alexa, movie night with kids"
+    Family->>APIGW: "Ecom, movie night with kids"
     APIGW->>Lambda: Route request with session token
     Lambda->>DynamoDB: Fetch family preferences & chat history
     Lambda->>Bedrock: Determine tool sequence (Strands tool loop)
@@ -103,7 +103,7 @@ sequenceDiagram
     Lambda->>Bedrock: Synthesize final friendly audio response
     Lambda->>DynamoDB: Save turn to memory table (TTL: 30 days)
     Lambda-->>APIGW: Return response payload + visual card metadata
-    APIGW-->>Family: Alexa speaks voice + displays living-room visual cards
+    APIGW-->>Family: Ecom speaks voice + displays living-room visual cards
 ```
 
 ---

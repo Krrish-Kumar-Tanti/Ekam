@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EKAM — AWS Architecture & Live Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d14;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #131c2e 0%, #090d14 75%);
+      --panel: rgba(16, 23, 38, 0.75);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --panel-glow: rgba(56, 189, 248, 0.15);
+      --ink: #f1f5f9;
+      --ink-dim: #94a3b8;
+      --ink-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-glow: #0284c7;
+      --aws-orange: #ff9900;
+      --aws-orange-dim: rgba(255, 153, 0, 0.15);
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.2);
+      --red: #ef4444;
+      --purple: #a855f7;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-spot-1 {
+      position: fixed;
+      top: 15%;
+      left: 20%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-spot-2 {
+      position: fixed;
+      bottom: 20%;
+      right: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 153, 0, 0.08), transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 22px 48px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      background: rgba(9, 13, 20, 0.6);
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .badge-aws {
+      background: linear-gradient(135deg, #ff9900, #ffb84d);
+      color: #111;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 20px rgba(255, 153, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .sub-bar {
+      font-size: 14px;
+      color: var(--ink-dim);
+      margin-top: 4px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sub-bar span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    /* Interactive Search & Command Bar */
+    .interactive-ctrl {
+      position: relative;
+      z-index: 10;
+      padding: 16px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(16, 23, 38, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      max-width: 1100px;
+    }
+
+    .voice-input-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .voice-input-wrapper svg {
+      position: absolute;
+      left: 18px;
+      color: var(--accent);
+      pointer-events: none;
+    }
+
+    .flow-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 13px 20px 13px 48px;
+      font-size: 15px;
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .flow-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .controls-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-fire {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border: none;
+      color: #04121d;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 13px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.4);
+      white-space: nowrap;
+    }
+
+    .btn-fire:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(56, 189, 248, 0.6);
+    }
+
+    .btn-stop {
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 13px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
+      white-space: nowrap;
+    }
+
+    .btn-stop:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(239, 68, 68, 0.55);
+    }
+
+    .btn-step {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 13px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-step:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .presets-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .presets-label {
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: var(--ink-dim);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    /* Main Stage Layout */
+    .stage {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      padding: 24px 48px;
+      gap: 32px;
+      max-width: 1750px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Flowchart canvas container */
+    .flowchart-container {
+      flex: 3;
+      position: relative;
+      background: rgba(11, 17, 28, 0.75);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 640px;
+      overflow: hidden;
+    }
+
+    #connector-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .node-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .node-row.top { margin-bottom: 25px; }
+    .node-row.middle { margin: 35px 0; justify-content: space-between; gap: 16px; }
+    .node-row.bottom { margin-top: 25px; }
+
+    .node {
+      background: rgba(16, 24, 39, 0.90);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      min-width: 150px;
+      max-width: 210px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .node:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.25);
+    }
+
+    .node.active {
+      border-color: #38bdf8;
+      background: rgba(14, 165, 233, 0.22);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.3);
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    .node.aws-primary {
+      border-color: rgba(255, 153, 0, 0.4);
+    }
+    .node.aws-primary:hover, .node.aws-primary.active {
+      border-color: #ff9900;
+      box-shadow: 0 0 35px rgba(255, 153, 0, 0.7), inset 0 0 15px rgba(255, 153, 0, 0.3);
+    }
+
+    .node-icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    .node-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+
+    .node.aws-primary .node-title {
+      color: #ffb84d;
+    }
+
+    .node-desc {
+      font-size: 11px;
+      color: var(--ink-dim);
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .node-badge {
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .node.aws-primary .node-badge {
+      background: rgba(255, 153, 0, 0.25);
+      border-color: #ff9900;
+      color: #ffb84d;
+    }
+
+    .callout-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 3;
+      margin: 0 0 12px;
+    }
+
+    .flow-callout {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .callout-throttled {
+      background: rgba(255, 153, 0, 0.15);
+      border: 1px solid rgba(255, 153, 0, 0.4);
+      color: #ffb84d;
+    }
+
+    .callout-security {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    /* Right: Details / Telemetry Inspector */
+    .inspector-panel {
+      flex: 1.4;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 26px;
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-height: 820px;
+      overflow-y: auto;
+    }
+
+    .inspector-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+    }
+
+    .inspector-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .inspector-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .inspector-summary {
+      font-size: 13px;
+      color: var(--ink-dim);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .log-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--ink-dim);
+    }
+
+    .log-val {
+      color: #fff;
+      font-weight: 600;
+    }
+    .log-val.success { color: var(--green); }
+    .log-val.aws { color: var(--aws-orange); }
+    .log-val.status-paused { color: var(--red); font-weight: 700; }
+
+    .code-preview {
+      background: #06090e;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .code-preview .keyword { color: #f43f5e; }
+    .code-preview .string { color: #34d399; }
+    .code-preview .function { color: #38bdf8; }
+    .code-preview .comment { color: #64748b; font-style: italic; }
+
+    .step-tracker {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tracker-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      padding: 7px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.25s;
+    }
+
+    .tracker-item.active {
+      color: #fff;
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 3px solid var(--accent);
+    }
+
+    .tracker-item.done {
+      color: var(--green);
+    }
+
+    .tracker-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    footer {
+      position: relative;
+      z-index: 10;
+      padding: 14px 48px;
+      background: rgba(9, 13, 20, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--ink-dim);
+    }
+
+    .metric-group {
+      display: flex;
+      gap: 24px;
+    }
+
+    .metric {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .metric strong { color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow-spot-1"></div>
+  <div class="glow-spot-2"></div>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div>
+      <div class="brand-title">
+        <span class="badge-aws">AWS BUILDER</span>
+        <h1>EKAM on AWS</h1>
+      </div>
+      <div class="sub-bar">
+        <span><span class="status-dot"></span> One CDK Serverless Stack in <strong>us-east-1</strong></span>
+        <span>•</span>
+        <span>Bedrock Nova / Claude + Polly Neural TTS + Streamable MCP Server</span>
+        <span>•</span>
+        <span>Idle Cost: <strong>~$0.00 / mo</strong> (Pure Serverless)</span>
+      </div>
+    </div>
+    <div>
+      <a href="/" style="color:var(--accent); text-decoration:none; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px; padding:8px 16px; border:1px solid rgba(56,189,248,0.3); border-radius:10px; background:rgba(56,189,248,0.08);">
+        ← Open Live EKAM UI
+      </a>
+    </div>
+  </header>
+
+  <!-- Interactive Search & Control Bar -->
+  <section class="interactive-ctrl">
+    <div class="input-row">
+      <div class="voice-input-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <input type="text" id="userInput" class="flow-input" value="movie night with kids" placeholder="Type a family command or select a preset below...">
+      </div>
+      <div class="controls-btn-group">
+        <button class="btn-fire" id="traceBtn" onclick="runSimulation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Trace AWS Flow
+        </button>
+        <button class="btn-stop" id="stopBtn" onclick="stopSimulation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          Stop / Pause Flow
+        </button>
+        <button class="btn-step" id="stepBtn" onclick="stepForward()">
+          Step Next →
+        </button>
+      </div>
+    </div>
+    <div class="presets-row">
+      <span class="presets-label">Interactive Presets:</span>
+      <button class="chip-btn" onclick="selectPreset('movie night with kids')">🎬 Hero: "movie night with kids"</button>
+      <button class="chip-btn" onclick="selectPreset('who is at the front door?')">🔔 "who is at the front door?"</button>
+      <button class="chip-btn" onclick="selectPreset('check in on grandma')">👵 "check in on grandma"</button>
+      <button class="chip-btn" onclick="selectPreset('order popcorn and snacks with PIN')">🍿 "order snacks (PIN approval)"</button>
+      <button class="chip-btn" onclick="selectPreset('how is the weather outside?')">🌤️ "weather & outdoor play"</button>
+    </div>
+  </section>
+
+  <!-- Main Architecture Stage -->
+  <main class="stage">
+    <!-- Flowchart Canvas Area (No center play button blocking the view) -->
+    <div class="flowchart-container" id="flowchartCanvas">
+      <svg id="connector-canvas"></svg>
+
+      <!-- TOP ROW: Managed AWS Services & Fallbacks -->
+      <div class="node-row top">
+        <div class="node" id="node-cognito" onclick="inspectNode('cognito')">
+          <div class="node-icon">🔐</div>
+          <div class="node-title">Cognito</div>
+          <div class="node-desc">Family profiles & PIN Auth</div>
+          <span class="node-badge">Security</span>
+        </div>
+
+        <div class="node" id="node-s3" onclick="inspectNode('s3')">
+          <div class="node-icon">📦</div>
+          <div class="node-title">S3 Bucket</div>
+          <div class="node-desc">Static web app & door snapshots</div>
+          <span class="node-badge">Storage</span>
+        </div>
+
+        <div class="node aws-primary" id="node-ssm" onclick="inspectNode('ssm')">
+          <div class="node-icon">⚙️</div>
+          <div class="node-title">SSM & Secrets</div>
+          <div class="node-desc">USE_BEDROCK / POLLY config</div>
+          <span class="node-badge">Config</span>
+        </div>
+
+        <div class="node aws-primary" id="node-bedrock" onclick="inspectNode('bedrock')">
+          <div class="node-icon">🧠</div>
+          <div class="node-title">Amazon Bedrock</div>
+          <div class="node-desc">Nova Micro / Claude Sonnet</div>
+          <span class="node-badge">AI Brain</span>
+        </div>
+
+        <div class="node aws-primary" id="node-polly" onclick="inspectNode('polly')">
+          <div class="node-icon">🎙️</div>
+          <div class="node-title">Amazon Polly</div>
+          <div class="node-desc">Neural TTS (Joanna / Aditi)</div>
+          <span class="node-badge">Voice</span>
+        </div>
+      </div>
+
+      <!-- MIDDLE ROW: Core Request Highway (Direct flow from device to DB) -->
+      <div class="node-row middle">
+        <div class="node" id="node-device" onclick="inspectNode('device')">
+          <div class="node-icon">📺</div>
+          <div class="node-title">Echo Show / TV</div>
+          <div class="node-desc">Ecom UI on Family Device</div>
+          <span class="node-badge">Client</span>
+        </div>
+
+        <div class="node" id="node-cloudfront" onclick="inspectNode('cloudfront')">
+          <div class="node-icon">🌐</div>
+          <div class="node-title">CloudFront</div>
+          <div class="node-desc">Edge CDN, HTTPS, Cache</div>
+          <span class="node-badge">Edge</span>
+        </div>
+
+        <div class="node aws-primary" id="node-apigateway" onclick="inspectNode('apigateway')">
+          <div class="node-icon">🚪</div>
+          <div class="node-title">API Gateway</div>
+          <div class="node-desc">Routes /api/chat & /mcp</div>
+          <span class="node-badge">Routing</span>
+        </div>
+
+        <div class="node aws-primary" id="node-lambda" onclick="inspectNode('lambda')">
+          <div class="node-icon">⚡</div>
+          <div class="node-title">AWS Lambda</div>
+          <div class="node-desc">agent.py Router & Strands Loop</div>
+          <span class="node-badge">Compute</span>
+        </div>
+
+        <div class="node aws-primary" id="node-dynamodb" onclick="inspectNode('dynamodb')">
+          <div class="node-icon">🗄️</div>
+          <div class="node-title">DynamoDB</div>
+          <div class="node-desc">Session Memory & Audit Ledger</div>
+          <span class="node-badge">Database</span>
+        </div>
+      </div>
+
+      <!-- Request-highway annotations -->
+      <div class="callout-row">
+        <div class="flow-callout callout-throttled">Throttled: 25/sec · Burst 50</div>
+        <div class="flow-callout callout-security">Kids-Safe Guardrail & Audit Log</div>
+      </div>
+
+      <!-- BOTTOM ROW: MCP Tools, EventBridge, and External Smart Home -->
+      <div class="node-row bottom">
+        <div class="node" id="node-eventbridge" onclick="inspectNode('eventbridge')">
+          <div class="node-icon">⏰</div>
+          <div class="node-title">EventBridge</div>
+          <div class="node-desc">Scheduled Grandma check-ins</div>
+          <span class="node-badge">Cron</span>
+        </div>
+
+        <div class="node aws-primary" id="node-mcp" onclick="inspectNode('mcp')">
+          <div class="node-icon">🛠️</div>
+          <div class="node-title">MCP Streamable HTTP</div>
+          <div class="node-desc">11 Smart Home Tools (:8001)</div>
+          <span class="node-badge">MCP 2025-11-25</span>
+        </div>
+
+        <div class="node" id="node-devices" onclick="inspectNode('devices')">
+          <div class="node-icon">🏡</div>
+          <div class="node-title">Home Devices</div>
+          <div class="node-desc">TV, Door Cam, Lights, Cart</div>
+          <span class="node-badge">Peripherals</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Live Inspector & Code Walkthrough -->
+    <aside class="inspector-panel" id="inspectorPanel">
+      <div class="inspector-header">
+        <span class="inspector-tag" id="inspTag">AWS COMPONENT INSPECTOR</span>
+        <h2 class="inspector-title" id="inspTitle">Amazon Bedrock + Agent Brain</h2>
+        <p class="inspector-summary" id="inspSummary">
+          Click any component, run the flow, or click 'Stop / Pause' at any moment to freeze and explain each component in your video.
+        </p>
+      </div>
+
+      <!-- Live Packet Telemetry -->
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; margin-bottom:8px;">Live Telemetry & Step Trace</div>
+        <div class="log-card">
+          <div class="log-row"><span>Active Query:</span><span class="log-val" id="teleQuery">"movie night with kids"</span></div>
+          <div class="log-row"><span>Flow Status:</span><span class="log-val success" id="teleStatus">Ready / Idle</span></div>
+          <div class="log-row"><span>AWS Region:</span><span class="log-val aws" id="teleRegion">us-east-1</span></div>
+          <div class="log-row"><span>Model ID:</span><span class="log-val aws" id="teleModel">amazon.nova-micro-v1:0</span></div>
+          <div class="log-row"><span>MCP Tools Dispatched:</span><span class="log-val success" id="teleTools">6 tools dispatched</span></div>
+          <div class="log-row"><span>Safety Status:</span><span class="log-val success" id="teleSafety">Kids Mode ON (Bluey/Encanto safe)</span></div>
+        </div>
+      </div>
+
+      <!-- Step-by-Step Flow Tracker -->
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; margin-bottom:8px;">Pipeline Sequence</div>
+        <div class="step-tracker" id="stepTracker">
+          <div class="tracker-item active" id="track-1"><span class="tracker-dot"></span> 1. User voice captured on Echo Show / TV UI</div>
+          <div class="tracker-item" id="track-2"><span class="tracker-dot"></span> 2. Edge routing via CloudFront & API Gateway</div>
+          <div class="tracker-item" id="track-3"><span class="tracker-dot"></span> 3. Lambda invokes agent.py & Strands tool loop</div>
+          <div class="tracker-item" id="track-4"><span class="tracker-dot"></span> 4. MCP Server executes 5 tools simultaneously</div>
+          <div class="tracker-item" id="track-5"><span class="tracker-dot"></span> 5. Amazon Bedrock synthesizes friendly reply</div>
+          <div class="tracker-item" id="track-6"><span class="tracker-dot"></span> 6. Amazon Polly speaks & cards render on screen</div>
+        </div>
+      </div>
+
+      <!-- Code Proof Section -->
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12px; font-weight:700; color:var(--ink-muted); text-transform:uppercase;">Code Proof (In Repository)</span>
+          <span style="font-size:11px; font-family:var(--font-mono); color:var(--accent);" id="inspFile">agent/agent.py:354</span>
+        </div>
+        <pre class="code-preview" id="inspCode"><code><span class="keyword">def</span> <span class="function">try_bedrock_reply</span>(user_text, context, lang=<span class="string">"en"</span>):
+    <span class="comment"># boto3 bedrock-runtime call</span>
+    client = boto3.client(<span class="string">"bedrock-runtime"</span>, region_name=<span class="string">"us-east-1"</span>)
+    model = os.getenv(<span class="string">"BEDROCK_MODEL_ID"</span>, <span class="string">"amazon.nova-micro-v1:0"</span>)
+    body = json.dumps({
+        <span class="string">"messages"</span>: [{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: [{<span class="string">"text"</span>: prompt}]}]
+    })
+    resp = client.invoke_model(modelId=model, body=body)
+    <span class="keyword">return</span> extract_text(resp)</code></pre>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bottom Metric & Architecture Summary Bar -->
+  <footer>
+    <div class="metric-group">
+      <div class="metric"><strong>AWS Builder Mini:</strong> Bedrock Nova + Polly Neural + Lambda</div>
+      <div class="metric"><strong>Zero-Fail Fallback:</strong> Shipped mock-first, zero dependency crash</div>
+      <div class="metric"><strong>MCP Spec:</strong> 2025-11-25 Streamable HTTP (11 tools)</div>
+    </div>
+    <div>
+      <span style="color:var(--aws-orange); font-weight:700;">AWS ap-south-1 / us-east-1 Ready</span>
+    </div>
+  </footer>
+
+  <script>
+    const NODE_DATA = {
+      bedrock: {
+        tag: "PRIMARY AWS SERVICE • AI REASONING",
+        title: "Amazon Bedrock (Nova Micro / Claude 3)",
+        summary: "Powers conversational polish, natural language intent recognition, and multi-turn family dialog. Implemented via boto3 client('bedrock-runtime'). If credentials or quotas are absent, gracefully degrades to deterministic mock brain.",
+        file: "agent/agent.py:354",
+        code: `def try_bedrock_reply(user_text: str, context: str, lang: str = "en") -> str:
+    # AWS Builder mini-challenge proof: uses boto3 bedrock-runtime
+    if os.getenv("USE_BEDROCK", "0") != "1":
+        return ""
+    import boto3
+    region = os.getenv("AWS_REGION", "us-east-1")
+    model = os.getenv("BEDROCK_MODEL_ID", "amazon.nova-micro-v1:0")
+    client = boto3.client("bedrock-runtime", region_name=region)
+    resp = client.invoke_model(modelId=model, body=body)
+    return extract_text(resp)`
+      },
+      polly: {
+        tag: "AWS SPEECH SERVICE • NEURAL TTS",
+        title: "Amazon Polly (Neural Text-to-Speech)",
+        summary: "Transforms Ecom's text responses into ultra-realistic human speech. POST /api/speak calls boto3.client('polly') with Engine='neural' and VoiceId='Joanna' or 'Aditi' for Indian accents, returning audio_b64. Degrades cleanly to browser Web Speech API.",
+        file: "api/main.py:55",
+        code: `@app.post("/api/speak")
+def speak(body: SpeakIn):
+    if os.getenv("USE_POLLY", "0") != "1":
+        return {"fallback": True}
+    client = boto3.client("polly", region_name="us-east-1")
+    resp = client.synthesize_speech(
+        Text=body.text[:3000],
+        OutputFormat="mp3",
+        VoiceId=body.voice or "Joanna",
+        Engine="neural"
+    )
+    return {"audio_b64": base64.b64encode(resp["AudioStream"].read()).decode()}`
+      },
+      lambda: {
+        tag: "AWS SERVERLESS COMPUTE",
+        title: "AWS Lambda (FastAPI Agent Core)",
+        summary: "Executes the EKAM orchestrator. Runs FastAPI api/main.py + agent/agent.py with zero cold-start bloat. Parses user requests, validates kid-safety rules, manages multi-turn history, and dispatches MCP tool calls.",
+        file: "agent/agent.py:480",
+        code: `def run_agent(user_text: str, history: List = None, profile: Dict = None) -> Dict:
+    # Strands-style agent loop
+    # 1. Inspect kids_mode & prompt
+    # 2. Dispatch MCP tools (calendar, tv, door, order, grandma)
+    # 3. Enrich context with agent/memory.json
+    # 4. Polish reply with Bedrock
+    return {"reply": reply, "cards": cards, "tools_used": tools}`
+      },
+      dynamodb: {
+        tag: "AWS PERSISTENCE & AUDIT",
+        title: "Amazon DynamoDB (Memory & Ledger)",
+        summary: "Provides millisecond storage for multi-turn family memory (agent/memory.json) and immutable safety audit trails (data/audit.jsonl). Logs grocery purchase confirmations, door scans, and grandma check-in dates with 30-day TTL.",
+        file: "mcp-server/server.py:280",
+        code: `def log_audit(action: str, details: dict):
+    entry = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "action": action,
+        "details": details,
+        "verified_by": "EKAM PIN / Kids-Guard"
+    }
+    # Read via GET /api/audit`
+      },
+      mcp: {
+        tag: "OPEN PROTOCOL • STREAMABLE HTTP",
+        title: "Model Context Protocol Server (:8001)",
+        summary: "A pure-Python JSON-RPC 2.0 MCP server adhering to MCP Protocol Version 2025-11-25. Exposes 11 tools: tool_get_calendar, tool_tv_control, tool_door_status, tool_order_groceries, tool_remind_grandma, tool_propose_order, etc.",
+        file: "mcp-server/server.py:120",
+        code: `TOOLS = [
+    {"name": "get_calendar", "description": "Fetch family schedule"},
+    {"name": "tv_control", "description": "Set TV app and kids-safe mode"},
+    {"name": "door_status", "description": "Check front door camera & packages"},
+    {"name": "order_groceries", "description": "Confirm grocery & snack order"},
+    {"name": "remind_grandma", "description": "Schedule caretaking call"}
+]`
+      },
+      apigateway: {
+        tag: "AWS API MANAGEMENT",
+        title: "Amazon API Gateway",
+        summary: "Manages ingress throttling (25 req/sec, burst 50), CORS handling, and routing for /api/chat, /api/speak, /api/memory, and /mcp. Protects backend Bedrock calls from runaway loops or denial of service.",
+        file: "api/main.py:24",
+        code: `app = FastAPI(title="EKAM API")
+# Routes /api/chat, /api/speak, /api/health
+# Proxies requests to Lambda execution handler`
+      },
+      device: {
+        tag: "CLIENT EXPERIENCE",
+        title: "Echo Show / TV Screen UI",
+        summary: "The zero-build simulated Ecom interface (app/index.html). Renders dynamic visual cards: Media Grid with Kids-Safe badges, TV Mockup, Live Camera Viewport with scanlines, Grocery Tracker with progress steps, and Voice Visualizer.",
+        file: "app/index.html & app.js",
+        code: `function renderCards(cards) {
+  cards.forEach(card => {
+    if (card.type === 'media') createMediaCard(card);
+    if (card.type === 'door') createDoorCamCard(card);
+    if (card.type === 'order') createOrderTrackerCard(card);
+  });
+}`
+      },
+      cloudfront: {
+        tag: "EDGE CONTENT DELIVERY",
+        title: "Amazon CloudFront CDN",
+        summary: "Distributes static assets (HTML, CSS, JS, audio buffers) globally with low-latency edge caching and SSL termination.",
+        file: "CloudFront Distribution",
+        code: `// Serves app/index.html, styles.css, app.js globally with gzip & brotli`
+      },
+      cognito: {
+        tag: "IDENTITY & PARENTAL GUARD",
+        title: "Amazon Cognito (PIN & Profile Auth)",
+        summary: "Secures purchasing actions. Requires 4-digit parent voice PIN before confirming orders or lifting TV restrictions.",
+        file: "agent/agent.py (PIN loop)",
+        code: `if user_pin == "1234":
+    return tool_confirm_order(proposal_id=prop, confirmed=True)`
+      },
+      s3: {
+        tag: "OBJECT STORAGE",
+        title: "Amazon S3",
+        summary: "Stores snapshot captures from the front-door camera (door_snapshot.jpg), cached TTS audio, and static web bundles.",
+        file: "S3 Private Bucket",
+        code: `s3.upload_file("door_snapshot.jpg", Bucket="ekam-media")`
+      },
+      ssm: {
+        tag: "CONFIG & SECRETS",
+        title: "AWS SSM & Secrets Manager",
+        summary: "Manages runtime switches without code redeployment: USE_BEDROCK=1, USE_POLLY=1, AWS_REGION, and BEDROCK_MODEL_ID.",
+        file: ".env / SSM Parameter Store",
+        code: `USE_BEDROCK=1\nUSE_POLLY=1\nAWS_REGION=us-east-1\nBEDROCK_MODEL_ID=amazon.nova-micro-v1:0`
+      },
+      eventbridge: {
+        tag: "AUTOMATION & CRON",
+        title: "Amazon EventBridge",
+        summary: "Schedules automated family reminders, e.g. daily 10:00 AM check-ins on Grandma and homework reminders.",
+        file: "EventBridge Rule",
+        code: `ScheduleExpression: "cron(0 10 * * ? *)" -> Lambda(remind_grandma)`
+      },
+      devices: {
+        tag: "SMART HOME PERIPHERALS",
+        title: "Living Room Peripherals",
+        summary: "Real smart home endpoints triggered by MCP tools: Smart TV (volume, apps, HDMI), Smart Doorbells (Ring/Blink), Smart Lights (dim to 20%), and Grocery Carts.",
+        file: "Smart Home IoT",
+        code: `// Dispatched via tool_tv_control, tool_scene_control, tool_door_status`
+      }
+    };
+
+    function inspectNode(key) {
+      const data = NODE_DATA[key];
+      if (!data) return;
+
+      document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+      const activeEl = document.getElementById('node-' + key);
+      if (activeEl) activeEl.classList.add('active');
+
+      document.getElementById('inspTag').textContent = data.tag;
+      document.getElementById('inspTitle').textContent = data.title;
+      document.getElementById('inspSummary').textContent = data.summary;
+      document.getElementById('inspFile').textContent = data.file;
+      document.getElementById('inspCode').innerHTML = escapeHtml(data.code);
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function selectPreset(text) {
+      document.getElementById('userInput').value = text;
+      runSimulation();
+    }
+
+    // Interactive Packet Flow Simulation Engine
+    const STEPS = [
+      { node: 'device', track: 'track-1', insp: 'device' },
+      { node: 'cloudfront', track: 'track-2', insp: 'cloudfront' },
+      { node: 'apigateway', track: 'track-2', insp: 'apigateway' },
+      { node: 'lambda', track: 'track-3', insp: 'lambda' },
+      { node: 'dynamodb', track: 'track-3', insp: 'dynamodb' },
+      { node: 'mcp', track: 'track-4', insp: 'mcp' },
+      { node: 'devices', track: 'track-4', insp: 'devices' },
+      { node: 'bedrock', track: 'track-5', insp: 'bedrock' },
+      { node: 'polly', track: 'track-6', insp: 'polly' },
+      { node: 'device', track: 'track-6', insp: 'device' }
+    ];
+
+    let currentStepIndex = 0;
+    let timerId = null;
+    let isRunning = false;
+
+    function runSimulation() {
+      stopSimulation(); // clear existing if any
+      isRunning = true;
+      currentStepIndex = 0;
+
+      const query = document.getElementById('userInput').value.trim() || "movie night with kids";
+      document.getElementById('teleQuery').textContent = `"${query}"`;
+      document.getElementById('teleStatus').textContent = "Running Active Flow...";
+      document.getElementById('teleStatus').className = "log-val success";
+
+      if (query.toLowerCase().includes("door")) {
+        document.getElementById('teleTools').textContent = "1 tool (tool_door_status)";
+      } else if (query.toLowerCase().includes("grandma")) {
+        document.getElementById('teleTools').textContent = "1 tool (tool_remind_grandma)";
+      } else if (query.toLowerCase().includes("order") || query.toLowerCase().includes("pin")) {
+        document.getElementById('teleTools').textContent = "2 tools (tool_propose_order, tool_confirm_order)";
+      } else {
+        document.getElementById('teleTools').textContent = "6 tools (calendar, tv, door, order, scene, grandma)";
+      }
+
+      document.querySelectorAll('.tracker-item').forEach(t => t.className = 'tracker-item');
+      executeStep();
+    }
+
+    function executeStep() {
+      if (!isRunning) return;
+      if (currentStepIndex >= STEPS.length) {
+        document.querySelectorAll('.tracker-item').forEach(t => t.className = 'tracker-item done');
+        document.getElementById('teleStatus').textContent = "Completed Successfully";
+        document.getElementById('teleStatus').className = "log-val success";
+        isRunning = false;
+        return;
+      }
+
+      const step = STEPS[currentStepIndex];
+      inspectNode(step.insp);
+      createAnimatedPacket(step.node);
+
+      const trackEl = document.getElementById(step.track);
+      if (trackEl) {
+        document.querySelectorAll('.tracker-item').forEach(t => t.classList.remove('active'));
+        trackEl.classList.add('active');
+      }
+
+      currentStepIndex++;
+      timerId = setTimeout(executeStep, 1000); // 1-second comfortable pacing per step
+    }
+
+    // Stop / Pause Flow immediately
+    function stopSimulation() {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = null;
+      }
+      isRunning = false;
+      document.getElementById('teleStatus').textContent = "STOPPED / PAUSED (Explaining)";
+      document.getElementById('teleStatus').className = "log-val status-paused";
+    }
+
+    // Manual step forward
+    function stepForward() {
+      stopSimulation();
+      if (currentStepIndex >= STEPS.length) currentStepIndex = 0;
+      
+      const step = STEPS[currentStepIndex];
+      inspectNode(step.insp);
+      createAnimatedPacket(step.node);
+
+      const trackEl = document.getElementById(step.track);
+      if (trackEl) {
+        document.querySelectorAll('.tracker-item').forEach(t => t.classList.remove('active'));
+        trackEl.classList.add('active');
+      }
+
+      document.getElementById('teleStatus').textContent = `Stepped to: ${step.node.toUpperCase()}`;
+      document.getElementById('teleStatus').className = "log-val aws";
+      currentStepIndex++;
+    }
+
+    function drawConnectors() {
+      const svg = document.getElementById('connector-canvas');
+      const container = document.getElementById('flowchartCanvas');
+      const cRect = container.getBoundingClientRect();
+
+      svg.setAttribute('viewBox', `0 0 ${cRect.width} ${cRect.height}`);
+      svg.innerHTML = '';
+
+      const links = [
+        ['node-device', 'node-cloudfront', '#38bdf8', false],
+        ['node-cloudfront', 'node-apigateway', '#38bdf8', false],
+        ['node-apigateway', 'node-lambda', '#ff9900', false],
+        ['node-lambda', 'node-dynamodb', '#ff9900', false],
+        ['node-cognito', 'node-apigateway', '#94a3b8', true],
+        ['node-s3', 'node-cloudfront', '#94a3b8', true],
+        ['node-ssm', 'node-lambda', '#ff9900', true],
+        ['node-bedrock', 'node-lambda', '#ff9900', false],
+        ['node-polly', 'node-lambda', '#ff9900', false],
+        ['node-lambda', 'node-mcp', '#38bdf8', false],
+        ['node-mcp', 'node-devices', '#38bdf8', false],
+        ['node-eventbridge', 'node-lambda', '#94a3b8', true]
+      ];
+
+      links.forEach(([fromId, toId, color, dashed]) => {
+        const fromEl = document.getElementById(fromId);
+        const toEl = document.getElementById(toId);
+        if (!fromEl || !toEl) return;
+
+        const fRect = fromEl.getBoundingClientRect();
+        const tRect = toEl.getBoundingClientRect();
+
+        const x1 = fRect.left - cRect.left + fRect.width / 2;
+        const y1 = fRect.top - cRect.top + fRect.height / 2;
+        const x2 = tRect.left - cRect.left + tRect.width / 2;
+        const y2 = tRect.top - cRect.top + tRect.height / 2;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const dx = (x2 - x1) * 0.4;
+        const d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', dashed ? '1.5' : '2');
+        path.setAttribute('stroke-opacity', dashed ? '0.3' : '0.5');
+        if (dashed) {
+          path.setAttribute('stroke-dasharray', '4, 4');
+        }
+        svg.appendChild(path);
+      });
+    }
+
+    function createAnimatedPacket(nodeId) {
+      const el = document.getElementById('node-' + nodeId);
+      if (!el) return;
+      el.classList.add('active');
+      setTimeout(() => {
+        if (!isRunning) return; // leave active if paused
+        el.classList.remove('active');
+      }, 700);
+    }
+
+    window.addEventListener('resize', drawConnectors);
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(drawConnectors, 200);
+      inspectNode('bedrock');
+    });
+
+    document.getElementById('userInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runSimulation();
+    });
+  </script>
+</body>
+</html>

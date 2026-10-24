@@ -1,5 +1,5 @@
 """
-Family Captain API bridge - serves simulated Alexa+ web UI + /api/chat.
+EKAM API bridge - serves simulated Ecom web UI + /api/chat.
 Run: uvicorn main:app --port 8000  (from api/ folder)
 """
 import base64
@@ -21,7 +21,7 @@ if os.path.join(_ROOT, "mcp-server") not in sys.path:
 from agent import run_agent, load_memory  # type: ignore
 from server import read_audit  # type: ignore
 
-app = FastAPI(title="Family Captain API")
+app = FastAPI(title="EKAM API")
 APP_DIR = os.path.join(_ROOT, "app")
 
 
@@ -33,7 +33,7 @@ class ChatIn(BaseModel):
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "service": "family-captain-api"}
+    return {"ok": True, "service": "ekam-api"}
 
 
 @app.get("/api/memory")

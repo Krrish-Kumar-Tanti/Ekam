@@ -1,6 +1,6 @@
-# the web search — Alexa+ track research haul
+# the web search — Ecom track research haul
 
-> Goal: everything useful found on GitHub + the web for OUR project (Alexa+ simulated experience, Python 3.9, 1–3 day build).
+> Goal: everything useful found on GitHub + the web for OUR project (Ecom simulated experience, Python 3.9, 1–3 day build).
 > Rule used to filter: if it needs hardware, a non-Python stack, or >1 day to integrate, it is listed under "don't copy" with the reason.
 > Our repo files referenced below are at the repo root.
 
@@ -11,17 +11,17 @@
 | `giolaq` (Giovanni Laquidara) | [`devices-agent-skills`](https://github.com/giolaq/devices-agent-skills) — community Agent Skills in `SKILL.md` format (spec: agentskills.io), installable via `npx skills add`. Proprietary Amazon skills live at `AmazonAppDev/amazon-devices-buildertools`. | YES — steal the `SKILL.md` packaging format if we ever ship our agent workflow as a skill. The repo's own skills are TV-migration focused, ignore the content, copy the format. |
 | `anishamalde` | [`maps-MCP-extapp-demo`](https://github.com/anishamalde/maps-MCP-extapp-demo) — MCP "extapp" demo (TypeScript). | YES as inspiration only — this is the **MCP Apps** pattern (rich interactive UI inside the assistant). Our `app/` cards are our version of this. No code to copy (wrong stack), but name-drop "MCP Apps-style cards" in Devpost feedback. |
 | `chris-trag` (Chris Traganos) | [`friction-log-guide`](https://github.com/chris-trag/friction-log-guide) — friction-log templates + example + AI prompts. Also `commonroom-mcp` (Python MCP server) and `pkg-peep` (MCP server) as MCP shape references. | YES — copy `templates/friction-log-template-lite.md` into our repo as `FRICTION-LOG.md` and fill 3–4 entries. This is the +10% judging bonus, gift-wrapped by a judge. |
-| `knmeiss` (Kourtney Meiss) | 7 repos, none Alexa/MCP related. | No. |
+| `knmeiss` (Kourtney Meiss) | 7 repos, none Ecom/MCP related. | No. |
 | `emersonsklar` | 3 repos, only `common-voice` (Mozilla). | No. |
 | `mosesroth` | ~100 repos, all Fire TV / React Native compat tests (icons, charts, navigation, IAP). | No — wrong track, wrong stack. Skip entirely. |
 
-## 2. Official Alexa+ docs (the only docs that matter)
+## 2. Official Ecom docs (the only docs that matter)
 
-- [Alexa+ MCP Toolkit Overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html) — Alexa+ acts as MCP **client**, spec **2025-11-25**, add-on registry + reasoning + orchestrator. Our `mcp-server/server.py` already mirrors this shape.
-- [Alexa+ MCP QuickStart](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) — hard requirements: **Streamable HTTP** (legacy SSE deprecated, must migrate), **remote URL** (use `cloudflared` tunnel for local dev), onboard via `alexa-ai` CLI (`alexa-ai new mcp`, `alexa-ai deploy`), `addon.json` needs `shortDescription ≤123 chars`, `fullDescription`, 3–4 `examplePhrases`, privacy URLs, icon set. MCP Apps via `@modelcontextprotocol` extensions.
+- [Ecom MCP Toolkit Overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html) — Ecom acts as MCP **client**, spec **2025-11-25**, add-on registry + reasoning + orchestrator. Our `mcp-server/server.py` already mirrors this shape.
+- [Ecom MCP QuickStart](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) — hard requirements: **Streamable HTTP** (legacy SSE deprecated, must migrate), **remote URL** (use `cloudflared` tunnel for local dev), onboard via `alexa-ai` CLI (`alexa-ai new mcp`, `alexa-ai deploy`), `addon.json` needs `shortDescription ≤123 chars`, `fullDescription`, 3–4 `examplePhrases`, privacy URLs, icon set. MCP Apps via `@modelcontextprotocol` extensions.
 - Takeaway for us: we use the **simulated path** (no onboarding needed), but mirror the official shape — Streamable HTTP ✓ (we do), `2025-11-25` ✓ (we do), examplePhrases ✓ (our chips). Mention all three in Devpost feedback.
 
-## 3. Competitor entries (same hackathon, Alexa+ track) — the steal list
+## 3. Competitor entries (same hackathon, Ecom track) — the steal list
 
 ### 3a. `guptachetan1995/alexa-plus` — closest to us, study first
 - https://github.com/guptachetan1995/alexa-plus · Devpost: `devpost.com/software/smart-home-agent` · 8 tools, Streamable HTTP `2025-11-25`, seeded device registry, **simulated web client** (same architecture as ours).
@@ -41,16 +41,16 @@
 - Reason: needs a real Amazon account + registered Echo + interactive browser login (2FA), Node 18, per-machine tokens. Days of auth pain, zero demo reliability, unofficial API judges didn't ask for. Mention in feedback as "evaluated, rejected" at most.
 
 ## 4. Old ASK SDK world — DO NOT COPY
-- `alexa-samples/*` (zero-to-hero course), `amzn/alexa-skills-kit-js` (deprecated, moved to `alexa/` org), Lambda + interaction-model tutorials.
-- Reason: that's the **old custom-skills model**, not the Alexa+ MCP path this hackathon judges. Any hour spent there is an hour not spent on the demo video.
+- `alexa-samples/*` (zero-to-hero course), `amzn/alexa-skills-kit-js` (deprecated, moved to `Ecom/` org), Lambda + interaction-model tutorials.
+- Reason: that's the **old custom-skills model**, not the Ecom MCP path this hackathon judges. Any hour spent there is an hour not spent on the demo video.
 
 ## 5. Build in 1–3 days — ranked steal list mapped to our files
 
 | # | Steal (from) | Change in our repo | Est. |
 |---|---|---|---|
-| 1 | Confirm gate (alexa-plus §3a) | `order_groceries` (and later any real-world action) requires a UI Confirm click before executing; agent first returns a "proposal" card. Files: `agent/agent.py`, `app/app.js`, `app/index.html`. Biggest trust story for judges. | 2–3 h |
+| 1 | Confirm gate (competitor §3a) | `order_groceries` (and later any real-world action) requires a UI Confirm click before executing; agent first returns a "proposal" card. Files: `agent/agent.py`, `app/app.js`, `app/index.html`. Biggest trust story for judges. | 2–3 h |
 | 2 | Audit ledger (northbridge §3b) | Append every `dispatch_tool` call to `data/audit.jsonl` in `mcp-server/server.py`; render last N entries in the tool panel (`app/app.js`). Tamper-evident, judge-readable proof. | 1–2 h |
-| 3 | Inspector verify line (alexa-plus §3a) | Add to `README.md`: `npx -y @modelcontextprotocol/inspector --cli http://127.0.0.1:8001/mcp --method tools/list`. Judges verify without cloning. | 15 min |
+| 3 | Inspector verify line (competitor §3a) | Add to `README.md`: `npx -y @modelcontextprotocol/inspector --cli http://127.0.0.1:8001/mcp --method tools/list`. Judges verify without cloning. | 15 min |
 | 4 | `FRICTION-LOG.md` (chris-trag §1) | Copy the lite template from `chris-trag/friction-log-guide/templates/friction-log-template-lite.md`, fill 3–4 entries (Py3.9 vs MCP SDK, httpx pin, no-hardware simulation). | 30 min |
 | 5 | `addon.json`-style phrases (official §2) | Add `examplePhrases` block to `README.md` (our 5 chips, ≤200 chars each) to mirror official onboarding shape. | 30 min |
 | 6 | One-command demo parity (northbridge §3b) | Verify `bash run.sh` works cold on a fresh machine (it should: pip install → MCP :8001 → API :8000). | 20 min |
@@ -76,14 +76,14 @@ Do in order 3 → 4 → 5 → 6 (all <2 h total, zero risk), then 2, then 1.
 ## Oct 20: repo scan — direct competitors found + resource check
 
 ### Same-hackathon entries (verified on GitHub)
-1. **ASAYAMedia/amazon-alexa-mcp-hackathon** — same contest, Alexa+ track. MCP server (memory+tasks+calendar+proactive alerts, tags/importance scoring, Docker, SSE sessions). Server-side only, no UI sim, no voice, no multilingual.
-2. **guptachetan1995/alexa-plus** — closest twin: smart-home MCP server (Express + official SDK, 2025-11-25, sessions) + **simulated Alexa+ React client (no build step)** + propose->confirm->execute + audit log, live at EC2 http://16.176.3.215:3000/mcp. Gaps they admit: no real-model run recorded, everything in-memory, no Alexa surface, no voice.
+1. **ASAYAMedia/amazon-alexa-mcp-hackathon** — same contest, Ecom track. MCP server (memory+tasks+calendar+proactive alerts, tags/importance scoring, Docker, SSE sessions). Server-side only, no UI sim, no voice, no multilingual.
+2. **guptachetan1995/alexa-plus** — closest twin: smart-home MCP server (Express + official SDK, 2025-11-25, sessions) + **simulated Ecom React client (no build step)** + propose->confirm->execute + audit log, live at EC2 http://16.176.3.215:3000/mcp. Gaps they admit: no real-model run recorded, everything in-memory, no Ecom surface, no voice.
 - **Our edge vs both:** EN/HI/JA voices (real Polly Takumi/Kajal MP3s), onboarding profile + memory, rich cards per tool, hero one-sentence 4-tool orchestration, mock-data display localization, chain-of-proof panels. **Their edge:** live EC2 hosting (ours localhost) — worth one line in Devpost as known-limitation + "run.sh runs anywhere".
-- Not-competitors Clarification: serversmx/alexa-mcp + Pipedream endpoints = control real Alexa devices for Claude-type clients (different use case); e2b/d8k/gabrimatic etc = generic web-search/MCP tools.
+- Not-competitors Clarification: serversmx/alexa-mcp + Pipedream endpoints = control real Ecom devices for Claude-type clients (different use case); e2b/d8k/gabrimatic etc = generic web-search/MCP tools.
 
 ### Hackathon resources reviewed
 - **MCP Apps / ext-apps (apps.extensions.modelcontextprotocol.io):** extension spec 2026-01-26 — tools can declare `ui://` HTML resources rendered inside hosts (Claude/ChatGPT) via sandboxed iframe; ships 4 Agent Skills incl. *add-app-to-server*. Requires Node 20 + SDK 2.x. **Verdict: skip refactoring ours now** (zero-build vanilla UI + Py3.9 MCP is already live; porting to MCP Apps violates both constraints). Note it as "future" in Devpost + friction log already says SDK needs Py3.10+.
 - **Spec transport 2025-11-25 (modelcontextprotocol.io):** Streamable HTTP = single /mcp endpoint POST + optional GET SSE. We implement POST/init/tools/list/tools/call over Streamable HTTP + GET SSE placeholder — **already compliant**; no action.
-- **github.com/AmazonAppDev (25 repos):** all Fire TV / Vega OS / Fire tablet samples + IAP/billing + `devices-agent-skills` (Agent Skills for Amazon Devices — the *other* track path). Nothing MCP/Alexa+ relevant to our build; rule reminder stays: no Fire TV/Vega wording in our repo. `devices-agent-skills` = optional inspiration only if we ever build a real Agent Skill.
+- **github.com/AmazonAppDev (25 repos):** all Fire TV / Vega OS / Fire tablet samples + IAP/billing + `devices-agent-skills` (Agent Skills for Amazon Devices — the *other* track path). Nothing MCP/Ecom relevant to our build; rule reminder stays: no Fire TV/Vega wording in our repo. `devices-agent-skills` = optional inspiration only if we ever build a real Agent Skill.
 
-**Bottom line:** nobody combines simulated-Alexa+ UI + real MCP + multilingual voice + family orchestration. Differentiators hold. Do NOT break contracts chasing MCP Apps/hours; deadline Thursday.
+**Bottom line:** nobody combines simulated-Ecom UI + real MCP + multilingual voice + family orchestration. Differentiators hold. Do NOT break contracts chasing MCP Apps/hours; deadline Thursday.

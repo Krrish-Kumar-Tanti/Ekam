@@ -1,6 +1,6 @@
-# Alexa+ Family Captain
+# EKAM
 
-One command — *"movie night with kids"* — and the whole evening sets itself up: calendar checked, living-room TV on in kids mode, front door glanced at, snacks ordered, Grandma checked in. This repo is that demo, built for the Amazon Developer Hackathon (Alexa+ track).
+One command — *"movie night with kids"* — and the whole evening sets itself up: calendar checked, living-room TV on in kids mode, front door glanced at, snacks ordered, Grandma checked in. This repo is that demo, built for the Amazon Developer Hackathon (Ecom track).
 
 If you're new here (hi, Krrish), read this file top to bottom. It teaches the project, not just describes it.
 
@@ -8,7 +8,7 @@ If you're new here (hi, Krrish), read this file top to bottom. It teaches the pr
 
 Everything in this repo is one of three things. Learn these and you understand 90% of it:
 
-**1. The hands — `mcp-server/server.py`.** A small server that exposes 11 tools (calendar, TV, door camera, grocery ordering, proposal gate, confirmation gate, grandma reminders, room scenes, weather, homework check, shopping list). It speaks an open Amazon-backed standard called MCP, which is just a fixed way of saying *"here are my tools, call them like this."* When anyone — our app, or one day real Alexa+ — wants something done, they call a tool here.
+**1. The hands — `mcp-server/server.py`.** A small server that exposes 11 tools (calendar, TV, door camera, grocery ordering, proposal gate, confirmation gate, grandma reminders, room scenes, weather, homework check, shopping list). It speaks an open Amazon-backed standard called MCP, which is just a fixed way of saying *"here are my tools, call them like this."* When anyone — our app, or one day real Ecom — wants something done, they call a tool here.
 
 **2. The receptionist — `agent/agent.py`.** Takes your sentence, figures out which tools to call, and writes the reply. Today it matches keywords ("door" → door tool) — fast, deterministic, works with no network. Optionally, a real AI model (Nova/Claude via Bedrock) can take over the thinking: the integration is fully wired, just set `USE_BEDROCK=1`.
 
@@ -142,9 +142,9 @@ Local AWS keys live ONLY in repo-root `.env` (git-ignored, never committed). Wit
 
 ## Languages & profile (new)
 
-First visit shows a 10-second onboarding: pick who Alexa calls you, the language, done — saved in your browser (`fc_profile`). Switch language any time with the 🌐 chip next to the mic:
+First visit shows a 10-second onboarding: pick who Ecom calls you, the language, done — saved in your browser (`ekam_profile`). Switch language any time with the 🌐 chip next to the mic:
 
-| Lang | Alexa speaks with | Try |
+| Lang | Ecom speaks with | Try |
 |---|---|---|
 | English | Polly Joanna (`en-US`) | `movie night with kids` |
 | हिन्दी (roman) | Polly Kajal (`hi-IN`) | `movie night aaj karna hai`, `dadi se baat karao`, `darwaza` |
@@ -154,7 +154,7 @@ Voice switching is real Polly speech (verified MP3s), replies and UI chrome swit
 
 ## Example Phrases
 
-Mirroring the official Alexa+ add-on `examplePhrases` format:
+Mirroring the official Ecom add-on `examplePhrases` format:
 
 ```json
 {
@@ -179,6 +179,13 @@ Each phrase triggers a different combination of the 11 tools. The first one ("mo
 - **Localhost only.** The demo runs on `127.0.0.1:8000` / `:8001`. We chose to invest build time in multilingual voice, rich cards, and the confirm gate rather than hosting infra. `bash run.sh` brings everything up cold on any machine with Python 3.9+.
 - **Simulated devices.** TV, door camera, and store are mock data — the hackathon's simulated path explicitly allows this. The code is shaped so real backends can replace the mocks later.
 - **Bedrock access denied by AWS** (support case closed Oct 21 — friction log #5). The agent's built-in keyword router is the designed default: it covers every demo beat with zero latency and zero network dependence. The Bedrock integration (Nova format, Anthropic fallback) is fully wired behind `USE_BEDROCK=1` — flip the flag on any account with model access and the same code takes over automatically.
+
+## Interactive Architecture & Flowchart
+
+EKAM includes an interactive, browser-based architecture simulator visualizing where AWS and the MCP protocol stand:
+- **Interactive Flow Simulator**: [`docs/aws-architecture-flow.html`](docs/aws-architecture-flow.html) (or `http://127.0.0.1:8000/app/aws-flow.html` when running).
+- Allows tracing live data packets step-by-step from client devices through CloudFront, API Gateway, Lambda, Bedrock, Polly, DynamoDB, and MCP smart home peripherals.
+- Built-in pause/resume controls and inspector panels showing code snippets and latency telemetry for each AWS service.
 
 ## License
 

@@ -1,4 +1,4 @@
-# Friction Log — Alexa+ Family Captain
+# Friction Log — EKAM
 
 > Template adapted from `chris-trag/friction-log-guide` (lite). Entries written while building, Oct 16–23, 2026.
 
@@ -20,9 +20,9 @@
 - **Workaround:** Pinned `httpx==0.27.0` in `requirements.txt`.
 - **Suggestion:** Nothing for Amazon — noting it here so the next agent doesn't "upgrade" the pin.
 
-## 3. No Alexa hardware or device lab access
+## 3. No Ecom hardware or device lab access
 
-- **Task:** Build an Alexa+ track entry with no Echo hardware or device lab access.
+- **Task:** Build an Ecom track entry with no Echo hardware or device lab access.
 - **Steps:** Read the track rules; found the simulated-experience path explicitly allows a web-app simulation with any agentic tool.
 - **Expected vs actual:** Expected a hardware blocker; the rules provided a first-class no-hardware path.
 - **Severity:** Nice-to-have (resolved by docs).
@@ -63,5 +63,5 @@
 - **Expected vs actual:** Expected a one-click deploy path; found none for Python MCP servers (only Node-based `alexa-ai deploy` for the real add-on path).
 - **Severity:** Nice-to-have (demo video covers the flow; `bash run.sh` brings everything up cold in <30 seconds).
 - **Workaround:** Stayed localhost. Documented as a known limitation in README. Added `npx -y @modelcontextprotocol/inspector --cli http://127.0.0.1:8001/mcp --method tools/list` for judges who do clone.
-- **Suggestion:** Offer a CloudFormation / SAM template for hackathon MCP servers (similar to how old Alexa Skills had Lambda blueprints) — would turn a 6-hour deploy into a 10-minute one.
+- **Suggestion:** Offer a CloudFormation / SAM template for hackathon MCP servers (similar to how old Ecom Skills had Lambda blueprints) — would turn a 6-hour deploy into a 10-minute one.
 

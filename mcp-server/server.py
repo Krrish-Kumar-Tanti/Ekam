@@ -1,5 +1,5 @@
 """
-Alexa+ Family Captain - MCP Server
+EKAM - MCP Server
 MCP spec 2025-11-25, Streamable HTTP transport.
 
 Run standalone:
@@ -28,7 +28,7 @@ from pydantic import BaseModel
 
 MCP_PROTOCOL_VERSION = "2025-11-25"
 
-app = FastAPI(title="Family Captain MCP Server", version="1.0.0")
+app = FastAPI(title="EKAM MCP Server", version="1.0.0")
 
 # ---- In-memory demo state (resets on restart, fine for hackathon) ----
 STATE = {
@@ -425,7 +425,7 @@ def handle_rpc(msg: Dict[str, Any]) -> Dict[str, Any]:
                 "result": {
                     "protocolVersion": MCP_PROTOCOL_VERSION,
                     "capabilities": {"tools": {"listChanged": False}},
-                    "serverInfo": {"name": "family-captain-mcp", "version": "1.0.0"},
+                    "serverInfo": {"name": "ekam-mcp", "version": "1.0.0"},
                 },
             }
         if method == "tools/list":

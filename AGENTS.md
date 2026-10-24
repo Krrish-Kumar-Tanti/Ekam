@@ -4,11 +4,11 @@
 
 ## 1. What we are building
 
-**Alexa+ Family Captain**: a simulated Alexa+ web experience (Amazon hackathon: Alexa+ track + AWS Builder + Open Source minis).
-One-page UI simulates Alexa+ orchestrating living-room TV + front-door camera + calendar + grocery orders + Grandma check-ins via a real MCP server + agent.
+**EKAM**: a simulated Ecom web experience (Amazon hackathon: Ecom track + AWS Builder + Open Source minis).
+One-page UI simulates Ecom orchestrating living-room TV + front-door camera + calendar + grocery orders + Grandma check-ins via a real MCP server + agent.
 Hero command: `"movie night with kids"` → 6 tool calls → 5 cards. Demo-friendly, no hardware.
 
-Repo: https://github.com/Krrish-Kumar-Tanti/Alexa-Demo · Local root: repo root (all files visible on GitHub, no subfolder).
+Repo: https://github.com/Krrish-Kumar-Tanti/Ekam · Local root: repo root (all files visible on GitHub, no subfolder).
 
 ## 2. Hard constraints (DO NOT BREAK)
 
@@ -21,7 +21,7 @@ Repo: https://github.com/Krrish-Kumar-Tanti/Alexa-Demo · Local root: repo root 
    - Agent entry: `agent/agent.py:run_agent(user_text, history, profile)` must always return without raising (mock fallback).
 3. **No build step for UI.** `app/` is vanilla HTML/CSS/JS served by FastAPI. No npm/vite/webpack. Keep it that way until after submission.
 4. **Ports:** MCP `:8001`, API+UI `:8000`. Never change without updating README + run.sh + app.js together.
-5. **Alexa+ only.** No other hackathon tracks in this repo. Device words stay generic: "living-room TV", "front-door camera". Never introduce other-track branding or trademarks (no Prime Video etc.).
+5. **Ecom only.** No other hackathon tracks in this repo. Device words stay generic: "living-room TV", "front-door camera". Never introduce other-track branding or trademarks (no Prime Video etc.).
 
 ## 3. File ownership (who does what)
 
@@ -30,7 +30,7 @@ Repo: https://github.com/Krrish-Kumar-Tanti/Alexa-Demo · Local root: repo root 
 | `mcp-server/server.py` | MCP tools + JSON-RPC handler | Pure functions `tool_*` importable by agent. State in `STATE` dict. Add tools by appending to `TOOLS` + `dispatch_tool`. |
 | `agent/agent.py` | Brain: router + Bedrock | `run_agent` never raises; `try_bedrock_reply` returns `""` on any failure. `boto3` import ONLY inside that function. |
 | `api/main.py` | Bridge + static server | Thin only: validate `ChatIn`, call `run_agent`, return it. No business logic here. |
-| `app/index.html/.js/.css` | Simulated Alexa+ UI | Dark TV theme. Chips call `send(q)`. Cards render `media/tv/door/order/calendar/remind`. Tool badges from `tools_used`. |
+| `app/index.html/.js/.css` | Simulated Ecom UI | Dark TV theme. Chips call `send(q)`. Cards render `media/tv/door/order/calendar/remind`. Tool badges from `tools_used`. |
 | `requirements.txt` | Deps | Pin versions. Don't add unpinned deps. |
 | `README/SUBMISSION.md` | Docs | Update when contracts/ports/tools change. |
 

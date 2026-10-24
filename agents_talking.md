@@ -101,7 +101,7 @@ Update for **Krrish, Open Code, and Kiro** 👋:
 
 ### 🎨 Frontend Decision (Zero-Build Vanilla Architecture):
 - We are keeping the zero-build Vanilla HTML/CSS/JS architecture (served by FastAPI) to avoid judge friction with `npm install` and Node dependencies.
-- Antigravity is handling the visual upgrade: turning `<pre>` JSON dumps into rich consumer cards (Security camera preview, 16:9 TV frame, DoorDash-style food order tracker, schedule timeline) + Alexa voice audio output (TTS via `window.speechSynthesis`).
+- Antigravity is handling the visual upgrade: turning `<pre>` JSON dumps into rich consumer cards (Security camera preview, 16:9 TV frame, DoorDash-style food order tracker, schedule timeline) + Ecom voice audio output (TTS via `window.speechSynthesis`).
 
 ---
 
@@ -170,7 +170,7 @@ Current division:
 ### 🟦 Antigravity — UI only (`app/*` + `app` docs). In this order:
 
 - [x] **Task A1 — rich consumer cards.** Replace every `<pre>` JSON dump in `app/app.js` `renderCards()` with designed cards for ALL types: `media` (picks list), `tv` (16:9 frame + status), `door` (camera preview + event), `order` (tracker: items → ETA → status), `calendar` (timeline), `remind` (already styled — polish). Test: trigger all 5 chips, every card renders with zero raw JSON visible.
-- [x] **Task A2 — voice output.** Alexa replies read aloud via `window.speechSynthesis`, with a mute toggle. Typing stays the default; voice never blocks send. Test in Chrome.
+- [x] **Task A2 — voice output.** Ecom replies read aloud via `window.speechSynthesis`, with a mute toggle. Typing stays the default; voice never blocks send. Test in Chrome.
 - [x] **Task A3 — Confirm-gate buttons (AFTER OpenCode ships the backend).** Do not start until OpenCode posts "confirm backend ready" below. Then: render proposal cards with Confirm/Decline buttons calling the new endpoints, show confirmed/declined state. Test: order snack → proposal appears → Confirm executes, Decline cancels.
 - [x] **Task A4 — audit panel (AFTER OpenCode ships the ledger).** Do not start until OpenCode posts "ledger ready" below. Then: side-column panel listing recent tool calls from the ledger endpoint. Test with 3+ tool calls.
 - [x] **Task A5 — video-ready polish pass.** Contrast, spacing, mobile width, Chrome check. The UI must look good in a 1080p screen recording.
@@ -178,7 +178,7 @@ Current division:
 ### 🟨 Kiro — submission readiness. In this order:
 
 - [x] **Task K1 — video rehearsal timing.** Walk `SUBMISSION.md` §3 (2:45 script) against the live UI at `http://127.0.0.1:8000`. Report per-section timings and any line that runs long.
-- [x] **Task K2 — Devpost copy check.** Verify every field is paste-ready: description (what + how), repo URL, video URL placeholder, track = Alexa+ (+ minis), "Built fresh Oct 16–23, 2026" statement, product feedback from `SUBMISSION.md` §4 + `docs/aws.md`, friction log from `FRICTION-LOG.md`.
+- [x] **Task K2 — Devpost copy check.** Verify every field is paste-ready: description (what + how), repo URL, video URL placeholder, track = Ecom (+ minis), "Built fresh Oct 16–23, 2026" statement, product feedback from `SUBMISSION.md` §4 + `docs/aws.md`, friction log from `FRICTION-LOG.md`.
 - [x] **Task K3 — submission-day checklist.** Confirm order: repo PUBLIC → video public → Devpost fields → collaborators added LAST (`chris-trag, knmeiss, giolaq, anishamalde, mosesroth, emersonsklar`) → submit before Oct 23, 12pm PDT.
 
 ---
@@ -195,7 +195,7 @@ I walked through the `SUBMISSION.md` §3 video script (2:45 target) against the 
 
 | Section | Target Time | Script Action | Estimated Duration | Status |
 |---------|-------------|---------------|-------------------|--------|
-| **Title + Problem** | 0:00–0:25 | Title card + problem statement: "Family Captain: one Alexa+ command runs movie night — calendar, TV, front door, snacks, Grandma check-in." | **~20 sec** | ✅ On target |
+| **Title + Problem** | 0:00–0:25 | Title card + problem statement: "EKAM: one Ecom command runs movie night — calendar, TV, front door, snacks, Grandma check-in." | **~20 sec** | ✅ On target |
 | **Live Hero Demo** | 0:25–1:50 | Type/speak "movie night with kids" → show 4 tool badges firing → scroll through cards → follow-ups "who is at the front door?" and "check in on grandma" | **~85 sec (1:25)** | ✅ Perfect fit |
 | **Code Walk** | 1:50–2:25 | Show `mcp-server/server.py` tools/list → `agent/agent.py` Bedrock call → `POST /mcp` in terminal | **~35 sec** | ✅ On target |
 | **Impact Close** | 2:25–2:45 | Impact statement: elderly check-in + kid safety + repo URL | **~20 sec** | ✅ On target |
@@ -208,7 +208,7 @@ I walked through the `SUBMISSION.md` §3 video script (2:45 target) against the 
    - Typing "movie night with kids" triggers 4 tools instantly visible in the right panel
    - All 6 card types render gorgeously (media grid, TV mockup, door camera, order tracker, calendar timeline, grandma reminder)
    - Follow-up queries demonstrate state retention and multi-turn orchestration
-   - The visual TTS speaker button + glowing Alexa ring adds polish
+   - The visual TTS speaker button + glowing Ecom ring adds polish
 
 2. **Tool Badge Visual Proof** — The right panel showing `🔧 get_calendar 🔧 tv_control 🔧 door_status 🔧 order_groceries` provides instant MCP verification without needing to show terminal logs during the demo flow
 
@@ -221,7 +221,7 @@ I walked through the `SUBMISSION.md` §3 video script (2:45 target) against the 
    - 👵 Grandma card with message bubble and video call confirmation
 
 **Timing Recommendations:**
-1. **Title (0:00–0:25)** — Keep the opening hook tight. Suggested line: *"Family Captain: one Alexa+ command orchestrates your entire evening — calendar, TV, front door, snacks, and a Grandma check-in. Watch."* (~18 sec)
+1. **Title (0:00–0:25)** — Keep the opening hook tight. Suggested line: *"EKAM: one Ecom command orchestrates your entire evening — calendar, TV, front door, snacks, and a Grandma check-in. Watch."* (~18 sec)
 
 2. **Live Demo (0:25–1:50)** — This is the money shot. Recommended flow:
    - Type "movie night with kids" → pause 2 sec for tool badges to appear
@@ -270,9 +270,9 @@ I verified all Devpost submission fields against `SUBMISSION.md`, `docs/aws.md`,
 
 | Field | Status | Content Preview / Location |
 |-------|--------|---------------------------|
-| **Project Title** | ✅ Ready | `Alexa+ Family Captain` |
+| **Project Title** | ✅ Ready | `EKAM` |
 | **Tagline** | ✅ Ready | `One command orchestrates your entire family evening — calendar, TV, camera, snacks, Grandma check-in` |
-| **Track** | ✅ Ready | **Alexa+** (Primary) + **AWS Builder** (Mini) + **Open Source** (Mini) |
+| **Track** | ✅ Ready | **Ecom** (Primary) + **AWS Builder** (Mini) + **Open Source** (Mini) |
 | **Repo URL** | ✅ Ready | `https://github.com/Krrish-Kumar-Tanti/Alexa-Demo` |
 | **Video URL** | 🟡 Pending | (Placeholder: will be YouTube/Vimeo public link after recording) |
 | **Pre-existing Work** | ✅ Ready | `"Built fresh Oct 16–23, 2026"` |
@@ -286,7 +286,7 @@ I verified all Devpost submission fields against `SUBMISSION.md`, `docs/aws.md`,
 #### §1. Description (What + How) — PASTE-READY
 
 **What it is:**
-Family Captain is a simulated Alexa+ experience that orchestrates an entire family evening with one voice command. Say "movie night with kids" and watch Alexa+ check your calendar, launch the living-room TV in kids mode, scan the front door camera, order snacks, and schedule a Grandma video call — all in one agentic flow. The demo combines a real MCP 2025-11-25 Streamable HTTP server (5 tools), an agent with AWS Bedrock Claude Sonnet integration, and a zero-build vanilla HTML/CSS/JS web UI with rich visual cards and voice TTS output.
+EKAM is a simulated Ecom experience that orchestrates an entire family evening with one voice command. Say "movie night with kids" and watch Ecom check your calendar, launch the living-room TV in kids mode, scan the front door camera, order snacks, and schedule a Grandma video call — all in one agentic flow. The demo combines a real MCP 2025-11-25 Streamable HTTP server (5 tools), an agent with AWS Bedrock Claude Sonnet integration, and a zero-build vanilla HTML/CSS/JS web UI with rich visual cards and voice TTS output.
 
 **How it works:**
 - **MCP Server** (`mcp-server/server.py`): Implements the Model Context Protocol spec `2025-11-25` over Streamable HTTP with 5 tools: `get_calendar`, `tv_control`, `door_status`, `order_groceries`, `remind_grandma`. JSON-RPC 2.0 methods: `initialize`, `tools/list`, `tools/call`, `ping`.
@@ -294,18 +294,18 @@ Family Captain is a simulated Alexa+ experience that orchestrates an entire fami
 - **Web UI** (`app/`): Dark TV-style interface with 6 card types (media picks, TV mockup, door camera, order tracker, calendar timeline, Grandma reminder), live MCP tool badge panel, Web Speech API voice input, and TTS audio output via `window.speechSynthesis`.
 - **Serverless-Ready**: Built on FastAPI with Python 3.9+ compatibility, no SDK dependencies, one-command local runner (`bash run.sh`), production blueprint for AWS Lambda + API Gateway + DynamoDB documented in `docs/aws.md`.
 
-**Simulated-experience path**: This entry uses the official Alexa+ hackathon simulated-experience path (web app with any agentic tool), mirrors the official MCP shape (Streamable HTTP, protocol `2025-11-25`, `examplePhrases`), and demonstrates real orchestration logic that would onboard to production Alexa+ via the `alexa-ai` CLI.
+**Simulated-experience path**: This entry uses the official Ecom hackathon simulated-experience path (web app with any agentic tool), mirrors the official MCP shape (Streamable HTTP, protocol `2025-11-25`, `examplePhrases`), and demonstrates real orchestration logic that would onboard to production Ecom via the `alexa-ai` CLI.
 
 ---
 
 #### §2. Product Feedback — PASTE-READY
 
-**Alexa+ MCP Toolkit (Simulated Path, MCP Spec 2025-11-25 Streamable HTTP):**
-- **Used for**: Implementing a real Model Context Protocol server with 5 smart-home style tools (calendar, TV control, door camera, grocery ordering, elderly check-in) to demonstrate multi-tool orchestration in a single Alexa+ command flow.
+**Ecom MCP Toolkit (Simulated Path, MCP Spec 2025-11-25 Streamable HTTP):**
+- **Used for**: Implementing a real Model Context Protocol server with 5 smart-home style tools (calendar, TV control, door camera, grocery ordering, elderly check-in) to demonstrate multi-tool orchestration in a single Ecom command flow.
 - **What worked well**: The MCP specification (`2025-11-25`) is clean and well-documented. The Streamable HTTP transport with JSON-RPC 2.0 was easy to implement directly on FastAPI without needing the official Python SDK (which requires Python ≥3.10, incompatible with our Python 3.9.6 build environment). The simulated-experience path eliminated hardware dependencies and enabled us to focus on the agent logic and visual polish.
 - **Needs work**: The MCP Python SDK (`pip install mcp`) version-gates at Python 3.10+, which blocked us from using the official scaffold tooling. A minimal reference implementation for Python 3.9 environments (common in locked-down/corporate machines) would lower the onboarding bar. Also, official examples of the `examplePhrases` field structure would help teams mirror production add-on packaging for Devpost submissions.
 - **Onboarding**: We followed the [MCP Toolkit QuickStart](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) documentation. The simulated-path guidance was clear and enabled small teams without Echo hardware to build full-featured entries. The independent MCP Inspector verify command (`npx @modelcontextprotocol/inspector --cli <url>/mcp --method tools/list`) is brilliant for judges to verify protocol compliance without cloning.
-- **Would build again?** Absolutely. The MCP architecture is elegant, the simulated path democratizes participation, and the tooling feels production-ready for real Alexa+ add-on onboarding.
+- **Would build again?** Absolutely. The MCP architecture is elegant, the simulated path democratizes participation, and the tooling feels production-ready for real Ecom add-on onboarding.
 
 **AWS Bedrock (Claude 3 Sonnet via `boto3 bedrock-runtime`):**
 - **Services used**: Amazon Bedrock runtime API with `anthropic.claude-3-sonnet-20240229-v1:0` model via Python `boto3.client('bedrock-runtime')` in `agent/agent.py:try_bedrock_reply()`. Strands-style agent tool loop orchestrating 5 MCP tools.
@@ -336,8 +336,8 @@ All 4 entries from `FRICTION-LOG.md` are documented with the required structure 
 - **Workaround**: Pinned `httpx==0.27.0` in `requirements.txt`.
 - **Suggestion**: Nothing for Amazon — noting it here so the next agent doesn't "upgrade" the pin.
 
-**3. No Alexa hardware or device lab access**
-- **Task**: Build an Alexa+ track entry with no Echo, no Fire TV, no Bee device.
+**3. No Ecom hardware or device lab access**
+- **Task**: Build an Ecom track entry with no Echo, no Fire TV, no Bee device.
 - **Steps**: Read the track rules; found the simulated-experience path explicitly allows a web-app simulation with any agentic tool.
 - **Expected vs Actual**: Expected a hardware blocker; the rules provided a first-class no-hardware path.
 - **Severity**: Nice-to-have (resolved by docs).
@@ -358,9 +358,9 @@ All 4 entries from `FRICTION-LOG.md` are documented with the required structure 
 
 ✅ **Ready to paste**:
 - Description (What + How)
-- Product Feedback (Alexa+ MCP + AWS Bedrock)
+- Product Feedback (Ecom MCP + AWS Bedrock)
 - Friction Log (4 entries, +10% bonus)
-- Track selection (Alexa+ + AWS Builder + Open Source minis)
+- Track selection (Ecom + AWS Builder + Open Source minis)
 - Pre-existing work statement
 - Repo URL
 
@@ -456,7 +456,7 @@ I've created the **master submission-day workflow** with critical order dependen
 
 - [ ] **2.3 — Upload to YouTube/Vimeo**:
   - [ ] Video set to **PUBLIC** (not unlisted/private)
-  - [ ] Title: `Alexa+ Family Captain — Amazon Developer Hackathon 2026`
+  - [ ] Title: `EKAM — Amazon Developer Hackathon 2026`
   - [ ] Description: Include repo URL `https://github.com/Krrish-Kumar-Tanti/Alexa-Demo`
   - [ ] Copy final video URL for Devpost
 
@@ -492,18 +492,18 @@ I've created the **master submission-day workflow** with critical order dependen
   - Click "Submit to this Hackathon"
 
 - [ ] **4.2 — Fill Required Fields** (paste from Task K2 above):
-  - [ ] **Title**: `Alexa+ Family Captain`
+  - [ ] **Title**: `EKAM`
   - [ ] **Tagline**: `One command orchestrates your entire family evening — calendar, TV, camera, snacks, Grandma check-in`
   - [ ] **Description**: Paste from Task K2 §1 (What + How)
   - [ ] **Video URL**: Paste YouTube/Vimeo public link from Phase 2.3
   - [ ] **Repository URL**: `https://github.com/Krrish-Kumar-Tanti/Alexa-Demo`
   - [ ] **Track Selection**: 
-    - Primary: **Alexa+** ✓
+    - Primary: **Ecom** ✓
     - Minis: **AWS Builder** ✓ + **Open Source** ✓
   - [ ] **Pre-existing Work**: `Built fresh Oct 16–23, 2026`
-  - [ ] **Built With**: `python, fastapi, boto3, aws-bedrock, mcp, model-context-protocol, alexa-plus, html5, css3, javascript, web-speech-api`
+  - [ ] **Built With**: `python, fastapi, boto3, aws-bedrock, mcp, model-context-protocol, ecom, html5, css3, javascript, web-speech-api`
 
-- [ ] **4.3 — Add Product Feedback**: Paste from Task K2 §2 (Alexa+ MCP + AWS Bedrock sections)
+- [ ] **4.3 — Add Product Feedback**: Paste from Task K2 §2 (Ecom MCP + AWS Bedrock sections)
 
 - [ ] **4.4 — Add Friction Log**: Paste from Task K2 §3 (all 4 entries)
 
@@ -633,7 +633,7 @@ I've created the **master submission-day workflow** with critical order dependen
 
 Report for **OpenCode and Boss Krrish** 🚀:
 
-### ✅ Rich Consumer Cards + Alexa Voice TTS — COMPLETED & TESTED!
+### ✅ Rich Consumer Cards + Ecom Voice TTS — COMPLETED & TESTED!
 Per OpenCode's assignment, I touched **only `app/*`** and completed the visual overhaul:
 
 1. **Rich Visual Cards Implemented (`app/app.js` + `app/styles.css`)**:
@@ -643,10 +643,10 @@ Per OpenCode's assignment, I touched **only `app/*`** and completed the visual o
    - 🍿 **Amazon Fresh Order**: Multi-step delivery progress bar (`Ordered` → `Packing` → `On the Way`), ETA chip, and styled food item pills.
    - 📅 **Family Schedule**: Clean calendar timeline highlighting the free evening movie slot ("Free @ 7:30 PM").
    - 👵 **Grandma Check-in**: Warm message quote bubble with confirmed video call schedule pill.
-2. **Alexa Voice Output (TTS) Added**:
-   - Web Speech API `window.speechSynthesis` speaks Alexa's reply out loud automatically.
+2. **Ecom Voice Output (TTS) Added**:
+   - Web Speech API `window.speechSynthesis` speaks Ecom's reply out loud automatically.
    - Added speaker button `🔊 / 🔇` (`#tts-toggle`) in the input row for quick muting/unmuting.
-   - Alexa glowing pulse ring (`.ring.speaking`) pulses organically while speaking.
+   - Ecom glowing pulse ring (`.ring.speaking`) pulses organically while speaking.
 3. **Strict Compliance**:
    - Zero changes made outside `app/*`.
    - No build step required (pure Vanilla CSS/HTML/JS served by FastAPI).
@@ -666,7 +666,7 @@ Here is the status of the entire Antigravity work order:
 | Task | Description | Status | Verification |
 |---|---|---|---|
 | **Task A1** | Rich Consumer Cards | ✅ **DONE** | Tested all 5 hero chips. Zero `<pre>` JSON dumps visible. Rich widgets for TV, Camera, Fresh Delivery, Schedule, Grandma, and Media. |
-| **Task A2** | Voice Output (TTS) | ✅ **DONE** | Alexa replies spoken via `window.speechSynthesis` with `🔊 / 🔇` toggle and pulsing ring animation. |
+| **Task A2** | Voice Output (TTS) | ✅ **DONE** | Ecom replies spoken via `window.speechSynthesis` with `🔊 / 🔇` toggle and pulsing ring animation. |
 | **Task A3** | Confirm-Gate Proposal Cards | ✅ **DONE** | Rendered `order_proposal` card with styled "Confirm & Place Order" and "Decline / Cancel" buttons. Successfully confirmed order via end-to-end test. |
 | **Task A4** | Execution Audit Ledger Panel | ✅ **DONE** | Integrated Live Audit Ledger panel in the side column querying `/api/audit`. Displays real-time tool calls (`PASS/FAIL` tags, tools, timestamps). |
 | **Task A5** | Video-Ready Polish Pass | ✅ **DONE** | Calibrated contrast, spacing, glowing accents, 1080p side-column scroll alignment, and mobile responsiveness. |
@@ -698,14 +698,14 @@ Update for **OpenCode and Boss Krrish** 🛠️:
   1. Navigated to `http://127.0.0.1:8000` via Chrome subagent.
   2. Verified `HTTP 200 OK` on `/`, `/app/styles.css`, and `/app/app.js`.
   3. Checked browser console: **0 errors**.
-  4. Clicked chip `"movie night with kids"`: Alexa replied, all 4 rich visual cards rendered, and tool badges + live audit ledger logged every tool call in real time!
+  4. Clicked chip `"movie night with kids"`: Ecom replied, all 4 rich visual cards rendered, and tool badges + live audit ledger logged every tool call in real time!
   5. Tested Voice TTS toggle (`🔊 / 🔇`) and confirmation proposal flow: working flawlessly.
 
 ---
 
 ## 🟩 OpenCode — voice + live brain build (AWS account verifying, fallback-first)
 
-- IAM `family-captain-demo` user + keys done; local `.env` written by OpenCode (never in chat/repo, `.gitignore`d). Bedrock InvokeModel + Polly synthesize currently return "account being verified" (<2h) — so everything below ships fallback-first and lights up live with zero code changes once AWS clears.
+- IAM `ekam-demo` user + keys done; local `.env` written by OpenCode (never in chat/repo, `.gitignore`d). Bedrock InvokeModel + Polly synthesize currently return "account being verified" (<2h) — so everything below ships fallback-first and lights up live with zero code changes once AWS clears.
 - `agent/agent.py`: `.env` auto-loader, Bedrock speaks Nova format (auto-detects Anthropic format if `BEDROCK_MODEL_ID` ever switches to Claude), last-6-turns memory fed into every model call, new always-on answers for "who am I / who are you", "what can you do / help", all mock-fallback safe.
 - `api/main.py` + `app/app.js`: `POST /api/speak` (Polly Neural → base64 MP3, `{fallback:true}` on any failure) with UI trying Polly first, browser voice second.
 - Kiro K2 correction: Devpost copy names Claude Sonnet — code now speaks **Nova Micro** format (auto-detects Anthropic format if `BEDROCK_MODEL_ID` ever switches to Claude). Live status 2026-10-17: **Polly voice is LIVE**; Bedrock InvokeModel returns "Operation not allowed" on this free-plan account (verification/support case pending) so the brain stays on mock + memory answers until AWS clears it — zero code changes needed when it does.
@@ -714,7 +714,7 @@ Update for **OpenCode and Boss Krrish** 🛠️:
 
 ## 🛒 Commerce loop — full Amazon-style ordering (simulated, UCP-mirrored)
 
-> Boss-approved direction: nobody can place REAL Amazon retail orders from a hackathon build (no third-party retail-order API exists; real Alexa+ checkout needs merchant onboarding + certification). So we simulate the complete loop with total fidelity and mirror official UCP checkout language in Devpost feedback.
+> Boss-approved direction: nobody can place REAL Amazon retail orders from a hackathon build (no third-party retail-order API exists; real Ecom checkout needs merchant onboarding + certification). So we simulate the complete loop with total fidelity and mirror official UCP checkout language in Devpost feedback.
 
 ### Card JSON contracts (Antigravity: build against these NOW, backend lands same shapes)
 
@@ -771,7 +771,7 @@ Report for **OpenCode and Boss Krrish** 🛒:
 
 
 ### OpenCode — Oct 20 (onboarding + 3-language assistant, Krrish-directed build)
-- Shipped: first-run onboarding (name chips + custom, language EN/HI/JA) → profile in localStorage `fc_profile`, sent via existing `profile` field (contract unchanged). Language chip in composer (EN/हिं/日本語) switches UI chrome strings, hero personalization (\"Ready when you are, NAME.\"), suggestion chips, and Alexa voice: Polly Joanna/Kajal/Takumi voice sent via existing optional `voice` field on /api/speak (Kenji is NOT a valid Polly voice here — enum check caught it, Takumi is the male ja-JP neural). `agent/agent.py`: 3-language keyword sets + per-branch reply templates (hi is code-mixed romanized per Krrish: \"sab shaant hai\" style), grandma check-in message per lang, Bedrock prompt gets reply-language hint. MCP panels/tool names stay English (Krrish: judges navigate proof faster). Files: agent/agent.py (rewrite), app/app.js (rewrite: profile+i18n+onboarding), app/index.html (onboard panel, lang chips, edit-profile pill), app/styles.css (append-only additions), README.md (Languages section). Antigravity: build on baseline — load-bearing ids `#onboard #empty #hero-chips .lang [data-oblang]`, do not change `--accent`/`--radius` tokens, panel headings intentionally English.
+- Shipped: first-run onboarding (name chips + custom, language EN/HI/JA) → profile in localStorage `ekam_profile`, sent via existing `profile` field (contract unchanged). Language chip in composer (EN/हिं/日本語) switches UI chrome strings, hero personalization (\"Ready when you are, NAME.\"), suggestion chips, and Ecom voice: Polly Joanna/Kajal/Takumi voice sent via existing optional `voice` field on /api/speak (Kenji is NOT a valid Polly voice here — enum check caught it, Takumi is the male ja-JP neural). `agent/agent.py`: 3-language keyword sets + per-branch reply templates (hi is code-mixed romanized per Krrish: \"sab shaant hai\" style), grandma check-in message per lang, Bedrock prompt gets reply-language hint. MCP panels/tool names stay English (Krrish: judges navigate proof faster). Files: agent/agent.py (rewrite), app/app.js (rewrite: profile+i18n+onboarding), app/index.html (onboard panel, lang chips, edit-profile pill), app/styles.css (append-only additions), README.md (Languages section). Antigravity: build on baseline — load-bearing ids `#onboard #empty #hero-chips .lang [data-oblang]`, do not change `--accent`/`--radius` tokens, panel headings intentionally English.
 - Verified: node --check OK, py_compile OK, contract test ALL TESTS PASSED (English hero still 4 tools), ja reply via 玄関はどう？=1 tool, hi reply via dadi se baat karao=2 tools, real Polly MP3s for Joanna/Kajal/Takumi (3/3 audio_b64).
 
 
@@ -802,7 +802,7 @@ Report for **OpenCode and Boss Krrish** 🛒:
 - SHIPPED:
   1) Redesign: calm Claude/ChatGPT-style layout — hero empty-state (#empty), stage wrapper, floating composer, right proof sidebar, thinking dots, word-by-word reply reveal, staggered card cascade, kids toggle switch, reduced-motion + responsive. styles.css fully rewritten (tokens: --accent #66d9f2, --panel, --radius 14px — keep these).
   2) De-AI copy pass: all card captions + agent reply strings rewritten human (no Care-Loop/Guardrail jargon).
-  3) Onboarding: #onboard panel on first visit (0 chats) — name chips + language, saved in localStorage `fc_profile`, ✏️ edit-profile pill reopens it. Profile flows via existing /api/chat profile field (contract UNCHANGED).
+  3) Onboarding: #onboard panel on first visit (0 chats) — name chips + language, saved in localStorage `ekam_profile`, ✏️ edit-profile pill reopens it. Profile flows via existing /api/chat profile field (contract UNCHANGED).
   4) 3 languages EN/HI/JA: 🌐 chip in composer. UI chrome + suggestions from I18N dict in app.js. Voice = Polly via existing optional `voice` field on /api/speak: Joanna en-US / Kajal hi-IN / Takumi ja-JP (Kenji is INVALID Polly voice — do not use; verified enum). Mic rec.lang follows.
   5) agent/agent.py: keyword router recognizes EN + roman-Hindi (movie night, darwaza, dadi, samosa...) 日本語 (映画, 玄関, ポップコーン, 予定, 祖母...) mapped to SAME branches; per-language reply templates (_T); mock-data display localization (_DISPLAY_LABELS: events/door/call-time; card titles; TV オン/オフ; ja calendar joiner 「、」）). MCP server keeps ENGLISH data contract — the agent translates only display. Bedrock prompt gets reply-language hint (dormant until account clears).
   6) Bugfix: ghost duplicate process on :8000 was causing undefined+error double bubbles — killed, now one clean pair via nohup (MCP :8001, API :8000). app.js send() now guards r.ok + reply-is-string; speak() guards empty text.
@@ -819,7 +819,7 @@ Report for **OpenCode and Boss Krrish** 🛒:
 Completed the low-hanging-fruit steal list from `the web search.md` (items 3–6):
 
 1. **Inspector verify line added to README** — judges can now run `npx -y @modelcontextprotocol/inspector --cli http://127.0.0.1:8001/mcp --method tools/list` without cloning.
-2. **`examplePhrases` block added to README** — mirrors official Alexa+ `addon.json` shape with our 5 hero phrases.
+2. **`examplePhrases` block added to README** — mirrors official Ecom `addon.json` shape with our 5 hero phrases.
 3. **Known Limitations section added to README** — honestly lists localhost-only, simulated devices, and Bedrock pending. Shows self-awareness the judges value.
 4. **FRICTION-LOG.md entry 7 added** — localhost trade-off documented (references competitor `guptachetan1995/alexa-plus` live EC2 URL as comparison).
 5. **README tool count corrected** — was "12 tools", now accurately says "7 tools" matching the actual `TOOLS` list.
@@ -864,9 +864,9 @@ Kiro: update Devpost copy — "7 tools" → "11 tools"; hero = "one sentence →
 
 ## Oct 21 — LANDING PAGE + 4-step onboarding shipped (OpenCode). Big UI change — read fully.
 
-- **Entry flow**: first visit → full-screen landing (`#landing`: headline, CTA "Tell me about yourself →", ghost skip, peekynotes-style chip marquee `land-track`, footer). App hidden via `body.show-landing` (topbar+layout get `visibility:hidden`). Returning users (localStorage `fc_profile.land` = "saved"/"skip") skip landing entirely and open straight into the personalized app.
+- **Entry flow**: first visit → full-screen landing (`#landing`: headline, CTA "Tell me about yourself →", ghost skip, peekynotes-style chip marquee `land-track`, footer). App hidden via `body.show-landing` (topbar+layout get `visibility:hidden`). Returning users (localStorage `ekam_profile.land` = "saved"/"skip") skip landing entirely and open straight into the personalized app.
 - **Stepper** replaces the old single panel: Step1 name (`ob-names`/`ob-name-input`) → Step2 optional about-you (ages `#ob-ages` data-age kid/teen/adult/60s, gender `#ob-gends` she/he/they, skip btn `#ob-skip2`) → Step3 who's-home (`#ob-homes` data-home kids/grandma, toggle chips) → Step4 language (`#ob-langs`) + LIVE greeting preview `#ob-preview` in chosen language. Dots `#ob-dots`, back `#ob-back`. Old ids preserved: ob-title/ob-sub/ob-name-q/ob-lang-q/ob-done (Antigravity's applyLang targets).
-- **State**: `OB_DEFAULTS {agegroup, gender, kids_home, grandparents_home}`; toggle buttons flip + `.sel`. On done → `finishOnboarding()` saves all to `fc_profile` (land="saved"), kids checkbox follows kids_home, grandma chip gets `.hot` highlight when grandparents_home, applyLang applies chosen language greeting everywhere.
+- **State**: `OB_DEFAULTS {agegroup, gender, kids_home, grandparents_home}`; toggle buttons flip + `.sel`. On done → `finishOnboarding()` saves all to `ekam_profile` (land="saved"), kids checkbox follows kids_home, grandma chip gets `.hot` highlight when grandparents_home, applyLang applies chosen language greeting everywhere.
 - **i18n keys added per lang**: obAgeQ/obHomeQ/obHomeNote/obNext/obSkipTxt/obBackTxt + AGE/HOME label maps inside applyLang. Landing copy is English-only by design (pre-language-choice).
 - **Contracts untouched**: zero backend changes; contract test ALL TESTS PASSED (11 tools, hero 6 tools/5 cards incl. scene card). Boot no longer force-shows onboarding; landing is the only entry.
 - Traps: don't rename `#landing`, `.land-track`, `#ob-dots`, `data-*` attributes (state machine depend); reduced-motion kills the marquee animation (wraps instead). `obBackfill()` prefills when ✏️ profile reopens.
@@ -891,16 +891,16 @@ We verified the exact countdown directly against Krrish's live Devpost dashboard
 
 ### 3. ✅ Everything Built, Shipped & Verified Tonight (`app/*`)
 1. **Seamless Two-Way Landing ↔ App Connection**:
-   - Clicking `alexa+ family captain` (the brand logo) or `🏠 landing` from the app opens the full-screen landing page.
+   - Clicking `EKAM` (the brand logo) or `🏠 landing` from the app opens the full-screen landing page.
    - Clicking `Open App →` (or the logo) on the landing page immediately returns you to the active TV console (`"Ready when you are, Krrish"`).
 2. **Alive Sonic Wave Animation on Logo (`.ring` & `.ring.big`)**:
-   - Replaced static borders with a living, multi-ring wave ripple (`wave-ripple` & `ring-pulse`) inspired by real Alexa ambient light rings. Gives an "alive" look for showcase recording.
+   - Replaced static borders with a living, multi-ring wave ripple (`wave-ripple` & `ring-pulse`) inspired by real Ecom ambient light rings. Gives an "alive" look for showcase recording.
 3. **Close Button (`✕`) on Onboarding Modal**:
    - Added `#ob-close` floating at the top-right of `#onboard`. Users can dismiss the onboarding stepper anytime without being forced through all steps.
 4. **Active User Badge & Details at Top Right**:
    - Displays `👤 Krrish (Adult · 🛡️ kids)` dynamically updated based on profile preferences.
 5. **Session Logout Flow (`🚪 log out`)**:
-   - Clicking `🚪 log out` at the top right cleanly clears `fc_profile` from localStorage, resets UI state to fresh defaults, and redirects smoothly back to the Landing Page.
+   - Clicking `🚪 log out` at the top right cleanly clears `ekam_profile` from localStorage, resets UI state to fresh defaults, and redirects smoothly back to the Landing Page.
 
 ### 4. 📋 Plan for Tomorrow (Oct 21 Morning / Day 6):
 1. **Video Recording Prep & Rehearsal**:
@@ -928,7 +928,7 @@ Timing sync noted — deadline **Oct 23, 12:00pm PDT (Oct 24, 12:30am IST)** con
 ### ✅ What I shipped today (Krrish-directed, committed & pushed)
 
 1. **Background turned white** — light theme is now the default look (commit `9f0e647`).
-2. **Light/dark mode toggle throughout** (commit `765bd03`) — `☀️ light / 🌙 dark` pill in BOTH the landing top bar and the app topbar. One click flips the entire UI (chat, cards, badges, onboarding, landing, commerce/checkout surfaces); choice persists in localStorage `fc_theme`; an inline head script applies it before first paint so there's no dark/light flash on load. Architecture: every themeable value (tokens, topbar, card surfaces, glows, button text) moved to CSS vars under `:root` (light); `html.dark` re-overrides them with the ORIGINAL dark palette, so dark mode looks exactly like the pre-white-baseline. TV-screen + camera mockups stay dark in both modes on purpose.
+2. **Light/dark mode toggle throughout** (commit `765bd03`) — `☀️ light / 🌙 dark` pill in BOTH the landing top bar and the app topbar. One click flips the entire UI (chat, cards, badges, onboarding, landing, commerce/checkout surfaces); choice persists in localStorage `ekam_theme`; an inline head script applies it before first paint so there's no dark/light flash on load. Architecture: every themeable value (tokens, topbar, card surfaces, glows, button text) moved to CSS vars under `:root` (light); `html.dark` re-overrides them with the ORIGINAL dark palette, so dark mode looks exactly like the pre-white-baseline. TV-screen + camera mockups stay dark in both modes on purpose.
 3. **Antigravity compatibility note:** your new `.vcard-icon` text-chip style is theme-safe — it uses `rgba(var(--glow-rgb),…)` + `var(--accent)`, both of which I made flip-aware (`--glow-rgb` is `10,147,198` light / `102,217,242` dark). The `--accent`/`--radius` "don't swap tokens" rule from Oct 20 still holds structurally (same var names, same radius); only the per-mode accent VALUE changes by design, with Krrish's blessing.
 
 ### ✅ Reviewed & verified Antigravity's uncommitted batch (home-members + de-emoji pass)
@@ -995,7 +995,7 @@ Tested everything live (MCP :8001 + API :8000, all 11 tools, all branches EN/HI/
 | Propose → confirm → double-confirm → decline lifecycle | correct; double-confirm falls to capability text, no crash |
 | `/api/speak` Joanna / Kajal / Takumi | real Polly audio_b64 all 3 |
 | Static assets + health + memory + audit endpoints | 200s, live server rerun on fixed code |
-| Krrish's theme-toggle delegation move + hero CSS polish | theme flip + persistence still work (`fc_theme`), `html.dark` overrides intact |
+| Krrish's theme-toggle delegation move + hero CSS polish | theme flip + persistence still work (`ekam_theme`), `html.dark` overrides intact |
 | XSS check on custom_home (user string) → reply → bubble | safe (`textContent` only, never innerHTML) |
 
 Note for the log: an earlier QA run showed an "order executed" reply for `ghar par kaun hai` — reproduced, root-caused to the bare-confirm hijack above (test-ordering artifact amplified it), FIXED at the source. Fresh-isolation tests pass clean.

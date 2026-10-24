@@ -5,7 +5,7 @@
 ## 1. Who, what, where
 
 - Human: **Krrish Kumar Tanti** — 2nd-year CSE, beginner, learns by doing. Teach in plain words, zero jargon. He hates AI-sounding text and robotic commit messages. He sends phone screenshots and wants "tell me one by one" guidance.
-- Project: **Alexa+ Family Captain** — simulated Alexa+ web demo for the Amazon hackathon (Alexa+ track + AWS Builder + Open Source minis). Deadline **Oct 23, 12:00pm PDT (Oct 24, 12:30am IST / GMT+5:30)**.
+- Project: **EKAM** — simulated Ecom web demo for the Amazon hackathon (Ecom track + AWS Builder + Open Source minis). Deadline **Oct 23, 12:00pm PDT (Oct 24, 12:30am IST / GMT+5:30)**.
 - Repo: https://github.com/Krrish-Kumar-Tanti/Alexa-Demo · branch `master` (only branch) · local root `/Users/harshtanti/Krrish/amazon developer hackathon` (flat — all files at root, that was a deliberate fix).
 - Team order (boss-posted, non-negotiable): **Krrish → you (OpenCode, backend + all commits) → Antigravity (`app/*` UI only) + Kiro (submission copy/video timing)**. Coordination file: `agents_talking.md` (append-only, NEVER edit another agent's messages, never let them push without permission).
 
@@ -19,13 +19,13 @@
 
 ## 3. AWS state (do NOT re-do any of this)
 
-- Local `.env` EXISTS in repo root (gitignored, never commit, never paste into chat): USE_BEDROCK=1, USE_POLLY=1, region us-east-1, IAM user `family-captain-demo`, BEDROCK_MODEL_ID=amazon.nova-micro-v1:0, POLLY_VOICE=Joanna. Keys work (STS verified).
+- Local `.env` EXISTS in repo root (gitignored, never commit, never paste into chat): USE_BEDROCK=1, USE_POLLY=1, region us-east-1, IAM user `ekam-demo`, BEDROCK_MODEL_ID=amazon.nova-micro-v1:0, POLLY_VOICE=Joanna. Keys work (STS verified).
 - **Polly is LIVE** (verified real MP3 bytes). **Bedrock is DEAD for this account — final**: AWS support **denied** the model-access/quota request Oct 21, 12:01 PM IST ("use 90% of current quotas, re-request after the next billing cycle" — impossible before the Oct 23 deadline). Per Krrish: stop hoping, ship without it. Local `.env` now has `USE_BEDROCK=0` → the deterministic mock brain is the designed default (also kills the doomed InvokeModel latency + fallback noise). Integration stays fully wired: set `USE_BEDROCK=1` with creds that have model access and the same code lights up, zero code changes. Friction log #5 + README + SUBMISSION updated to match — this is the honest AWS-Builder story now.
 - If Krrish says "brain still dead": CLOSED — Bedrock denied by AWS, decision made (mock-first is the shipped design, see §3 update above). No paid-plan action pending.
 
 ## 4. What's DONE (all pushed; last commit rewrote README to teaching voice)
 
-Day-1 scaffold, flatten-to-root, Alexa+-only debrand, remind_grandma, memory, docs/aws.md, confirm gate, audit ledger, MCP notification polish, Polly voice + UI playback, open-question answers, day-aware calendar, README teaching rewrite, FRICTION-LOG (6 entries), research file (`the web search.md`), talking-file work orders. Tests green at every commit.
+Day-1 scaffold, flatten-to-root, Ecom-only debrand, remind_grandma, memory, docs/aws.md, confirm gate, audit ledger, MCP notification polish, Polly voice + UI playback, open-question answers, day-aware calendar, README teaching rewrite, FRICTION-LOG (6 entries), research file (`the web search.md`), talking-file work orders. Tests green at every commit.
 
 ## 5. Exact commands (from repo root)
 
@@ -47,7 +47,7 @@ pip3 install "httpx==0.27.0"   # pinned: latest breaks TestClient on 3.9
 ## 7. Tripwires (learned the hard way)
 
 - Commit messages: ONE plain human sentence about file changes. Never `feat:`/`refactor:`/labels/backstory/Day-numbers/track-talk. He will call you out publicly.
-- Alexa+ ONLY in code/docs/UI. Banned strings: Fire TV, Prime Video, Amazon Fresh, Ring Doorbell, Fire/Vega OS, Bee. False positives to ignore: `.ring` CSS (Alexa light ring), "ring"/"prime" voice keywords in agent.py, "string" substrings, the AGENTS.md guard rule itself.
+- Ecom ONLY in code/docs/UI. Banned strings: Fire TV, Prime Video, Amazon Fresh, Ring Doorbell, Fire/Vega OS, Bee. False positives to ignore: `.ring` CSS (Ecom light ring), "ring"/"prime" voice keywords in agent.py, "string" substrings, the AGENTS.md guard rule itself.
 - Python 3.9-compatible code only (no match, no `list[dict]`, no mcp SDK). Dual-runs on 3.12 fine.
 - `agent/memory.json` + `data/` + `.env` + `*.log` are gitignored — if one ever shows in `git status`, stop and fix ignore before committing.
 - TestClient needs `httpx==0.27.0`; uvicorn via `python3 -m`; servers started with `&` die when the shell does — always restart fresh before verifying.
